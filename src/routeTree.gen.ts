@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManagerRouteImport } from './routes/manager'
 import { Route as ProviderRouteImport } from './routes/provider'
 import { Route as ResidentRouteImport } from './routes/resident'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,37 +47,51 @@ const ResidentRoute = ResidentRouteImport.update({
   path: '/resident',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/login' | '/manager' | '/provider' | '/resident'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/manager'
+    | '/provider'
+    | '/resident'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/login' | '/manager' | '/provider' | '/resident'
+  to: '/' | '/login' | '/manager' | '/provider' | '/resident' | '/admin'
   id:
     | '__root__'
     | '/'
@@ -85,11 +100,12 @@ export interface FileRouteTypes {
     | '/manager'
     | '/provider'
     | '/resident'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRoute
   ProviderRoute: typeof ProviderRoute
@@ -140,12 +156,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResidentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRoute,
   ProviderRoute: ProviderRoute,
