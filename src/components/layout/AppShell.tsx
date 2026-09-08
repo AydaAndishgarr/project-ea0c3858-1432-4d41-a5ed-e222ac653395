@@ -29,7 +29,7 @@ function NavList({ role, onNavigate }: { role: Role; onNavigate?: () => void }) 
         return (
           <Link
             key={item.to}
-            to={item.to}
+            to={item.to as "/"}
             onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
