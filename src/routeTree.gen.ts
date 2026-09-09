@@ -16,6 +16,12 @@ import { Route as ManagerRouteImport } from './routes/manager'
 import { Route as ProviderRouteImport } from './routes/provider'
 import { Route as ResidentRouteImport } from './routes/resident'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminManagersRouteImport } from './routes/admin.managers'
+import { Route as AdminRolesRouteImport } from './routes/admin.roles'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
+import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +58,36 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminManagersRoute = AdminManagersRouteImport.update({
+  id: '/managers',
+  path: '/managers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesRoute = AdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBuildingsIndexRoute = AdminBuildingsIndexRouteImport.update({
+  id: '/buildings/',
+  path: '/buildings/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBuildingsIdRoute = AdminBuildingsIdRouteImport.update({
+  id: '/buildings/$id',
+  path: '/buildings/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,7 +96,13 @@ export interface FileRoutesByFullPath {
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin/managers': typeof AdminManagersRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/buildings/$id': typeof AdminBuildingsIdRoute
+  '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,7 +110,13 @@ export interface FileRoutesByTo {
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin/managers': typeof AdminManagersRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/buildings/$id': typeof AdminBuildingsIdRoute
+  '/admin/buildings': typeof AdminBuildingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,7 +126,13 @@ export interface FileRoutesById {
   '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
+  '/admin/managers': typeof AdminManagersRoute
+  '/admin/roles': typeof AdminRolesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/buildings/$id': typeof AdminBuildingsIdRoute
+  '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -89,9 +143,27 @@ export interface FileRouteTypes {
     | '/manager'
     | '/provider'
     | '/resident'
+    | '/admin/managers'
+    | '/admin/roles'
+    | '/admin/subscriptions'
+    | '/admin/users'
     | '/admin/'
+    | '/admin/buildings/$id'
+    | '/admin/buildings/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/manager' | '/provider' | '/resident' | '/admin'
+  to:
+    | '/'
+    | '/login'
+    | '/manager'
+    | '/provider'
+    | '/resident'
+    | '/admin/managers'
+    | '/admin/roles'
+    | '/admin/subscriptions'
+    | '/admin/users'
+    | '/admin'
+    | '/admin/buildings/$id'
+    | '/admin/buildings'
   id:
     | '__root__'
     | '/'
@@ -100,7 +172,13 @@ export interface FileRouteTypes {
     | '/manager'
     | '/provider'
     | '/resident'
+    | '/admin/managers'
+    | '/admin/roles'
+    | '/admin/subscriptions'
+    | '/admin/users'
     | '/admin/'
+    | '/admin/buildings/$id'
+    | '/admin/buildings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -163,15 +241,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/managers': {
+      id: '/admin/managers'
+      path: '/managers'
+      fullPath: '/admin/managers'
+      preLoaderRoute: typeof AdminManagersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles': {
+      id: '/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/buildings/': {
+      id: '/admin/buildings/'
+      path: '/buildings'
+      fullPath: '/admin/buildings/'
+      preLoaderRoute: typeof AdminBuildingsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/buildings/$id': {
+      id: '/admin/buildings/$id'
+      path: '/buildings/$id'
+      fullPath: '/admin/buildings/$id'
+      preLoaderRoute: typeof AdminBuildingsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminManagersRoute: typeof AdminManagersRoute
+  AdminRolesRoute: typeof AdminRolesRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminBuildingsIdRoute: typeof AdminBuildingsIdRoute
+  AdminBuildingsIndexRoute: typeof AdminBuildingsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminManagersRoute: AdminManagersRoute,
+  AdminRolesRoute: AdminRolesRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminBuildingsIdRoute: AdminBuildingsIdRoute,
+  AdminBuildingsIndexRoute: AdminBuildingsIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
