@@ -17,7 +17,10 @@ import { Route as ProviderRouteImport } from './routes/provider'
 import { Route as ResidentRouteImport } from './routes/resident'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminManagersRouteImport } from './routes/admin.managers'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminRolesRouteImport } from './routes/admin.roles'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
@@ -63,9 +66,24 @@ const AdminManagersRoute = AdminManagersRouteImport.update({
   path: '/managers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRolesRoute = AdminRolesRouteImport.update({
   id: '/roles',
   path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
@@ -97,7 +115,10 @@ export interface FileRoutesByFullPath {
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -111,7 +132,10 @@ export interface FileRoutesByTo {
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
@@ -127,7 +151,10 @@ export interface FileRoutesById {
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -144,7 +171,10 @@ export interface FileRouteTypes {
     | '/provider'
     | '/resident'
     | '/admin/managers'
+    | '/admin/notifications'
+    | '/admin/reports'
     | '/admin/roles'
+    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/admin/'
@@ -158,7 +188,10 @@ export interface FileRouteTypes {
     | '/provider'
     | '/resident'
     | '/admin/managers'
+    | '/admin/notifications'
+    | '/admin/reports'
     | '/admin/roles'
+    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/admin'
@@ -173,7 +206,10 @@ export interface FileRouteTypes {
     | '/provider'
     | '/resident'
     | '/admin/managers'
+    | '/admin/notifications'
+    | '/admin/reports'
     | '/admin/roles'
+    | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
     | '/admin/'
@@ -248,11 +284,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminManagersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/roles': {
       id: '/admin/roles'
       path: '/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/subscriptions': {
@@ -288,7 +345,10 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminManagersRoute: typeof AdminManagersRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminReportsRoute: typeof AdminReportsRoute
   AdminRolesRoute: typeof AdminRolesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -298,7 +358,10 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminManagersRoute: AdminManagersRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminReportsRoute: AdminReportsRoute,
   AdminRolesRoute: AdminRolesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
