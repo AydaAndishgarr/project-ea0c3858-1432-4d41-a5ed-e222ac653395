@@ -25,6 +25,8 @@ import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscript
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as ManagerIndexRouteImport } from './routes/manager.index'
 import { Route as ManagerBuildingRouteImport } from './routes/manager.building'
+import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
+import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
 
@@ -108,6 +110,16 @@ const ManagerBuildingRoute = ManagerBuildingRouteImport.update({
   path: '/building',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerResidentsRoute = ManagerResidentsRouteImport.update({
+  id: '/residents',
+  path: '/residents',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerUnitsRoute = ManagerUnitsRouteImport.update({
+  id: '/units',
+  path: '/units',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const AdminBuildingsIndexRoute = AdminBuildingsIndexRouteImport.update({
   id: '/buildings/',
   path: '/buildings/',
@@ -134,6 +146,8 @@ export interface FileRoutesByFullPath {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
@@ -152,6 +166,8 @@ export interface FileRoutesByTo {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/units': typeof ManagerUnitsRoute
   '/admin': typeof AdminIndexRoute
   '/manager': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
@@ -173,6 +189,8 @@ export interface FileRoutesById {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
@@ -195,6 +213,8 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/residents'
+    | '/manager/units'
     | '/admin/'
     | '/manager/'
     | '/admin/buildings/$id'
@@ -213,6 +233,8 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/residents'
+    | '/manager/units'
     | '/admin'
     | '/manager'
     | '/admin/buildings/$id'
@@ -233,6 +255,8 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/residents'
+    | '/manager/units'
     | '/admin/'
     | '/manager/'
     | '/admin/buildings/$id'
@@ -362,6 +386,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerBuildingRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/residents': {
+      id: '/manager/residents'
+      path: '/residents'
+      fullPath: '/manager/residents'
+      preLoaderRoute: typeof ManagerResidentsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/units': {
+      id: '/manager/units'
+      path: '/units'
+      fullPath: '/manager/units'
+      preLoaderRoute: typeof ManagerUnitsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/admin/buildings/': {
       id: '/admin/buildings/'
       path: '/buildings'
@@ -409,11 +447,15 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ManagerRouteChildren {
   ManagerBuildingRoute: typeof ManagerBuildingRoute
+  ManagerResidentsRoute: typeof ManagerResidentsRoute
+  ManagerUnitsRoute: typeof ManagerUnitsRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
 }
 
 const ManagerRouteChildren: ManagerRouteChildren = {
   ManagerBuildingRoute: ManagerBuildingRoute,
+  ManagerResidentsRoute: ManagerResidentsRoute,
+  ManagerUnitsRoute: ManagerUnitsRoute,
   ManagerIndexRoute: ManagerIndexRoute,
 }
 
