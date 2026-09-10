@@ -25,6 +25,9 @@ import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscript
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as ManagerIndexRouteImport } from './routes/manager.index'
 import { Route as ManagerBuildingRouteImport } from './routes/manager.building'
+import { Route as ManagerChargesRouteImport } from './routes/manager.charges'
+import { Route as ManagerExpensesRouteImport } from './routes/manager.expenses'
+import { Route as ManagerPaymentsRouteImport } from './routes/manager.payments'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
@@ -110,6 +113,21 @@ const ManagerBuildingRoute = ManagerBuildingRouteImport.update({
   path: '/building',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerChargesRoute = ManagerChargesRouteImport.update({
+  id: '/charges',
+  path: '/charges',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerExpensesRoute = ManagerExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerPaymentsRoute = ManagerPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerResidentsRoute = ManagerResidentsRouteImport.update({
   id: '/residents',
   path: '/residents',
@@ -146,6 +164,9 @@ export interface FileRoutesByFullPath {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/charges': typeof ManagerChargesRoute
+  '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
@@ -166,6 +187,9 @@ export interface FileRoutesByTo {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/charges': typeof ManagerChargesRoute
+  '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin': typeof AdminIndexRoute
@@ -189,6 +213,9 @@ export interface FileRoutesById {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
   '/manager/building': typeof ManagerBuildingRoute
+  '/manager/charges': typeof ManagerChargesRoute
+  '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
@@ -213,6 +240,9 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/charges'
+    | '/manager/expenses'
+    | '/manager/payments'
     | '/manager/residents'
     | '/manager/units'
     | '/admin/'
@@ -233,6 +263,9 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/charges'
+    | '/manager/expenses'
+    | '/manager/payments'
     | '/manager/residents'
     | '/manager/units'
     | '/admin'
@@ -255,6 +288,9 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/users'
     | '/manager/building'
+    | '/manager/charges'
+    | '/manager/expenses'
+    | '/manager/payments'
     | '/manager/residents'
     | '/manager/units'
     | '/admin/'
@@ -386,6 +422,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerBuildingRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/charges': {
+      id: '/manager/charges'
+      path: '/charges'
+      fullPath: '/manager/charges'
+      preLoaderRoute: typeof ManagerChargesRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/expenses': {
+      id: '/manager/expenses'
+      path: '/expenses'
+      fullPath: '/manager/expenses'
+      preLoaderRoute: typeof ManagerExpensesRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/payments': {
+      id: '/manager/payments'
+      path: '/payments'
+      fullPath: '/manager/payments'
+      preLoaderRoute: typeof ManagerPaymentsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/residents': {
       id: '/manager/residents'
       path: '/residents'
@@ -447,6 +504,9 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ManagerRouteChildren {
   ManagerBuildingRoute: typeof ManagerBuildingRoute
+  ManagerChargesRoute: typeof ManagerChargesRoute
+  ManagerExpensesRoute: typeof ManagerExpensesRoute
+  ManagerPaymentsRoute: typeof ManagerPaymentsRoute
   ManagerResidentsRoute: typeof ManagerResidentsRoute
   ManagerUnitsRoute: typeof ManagerUnitsRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
@@ -454,6 +514,9 @@ interface ManagerRouteChildren {
 
 const ManagerRouteChildren: ManagerRouteChildren = {
   ManagerBuildingRoute: ManagerBuildingRoute,
+  ManagerChargesRoute: ManagerChargesRoute,
+  ManagerExpensesRoute: ManagerExpensesRoute,
+  ManagerPaymentsRoute: ManagerPaymentsRoute,
   ManagerResidentsRoute: ManagerResidentsRoute,
   ManagerUnitsRoute: ManagerUnitsRoute,
   ManagerIndexRoute: ManagerIndexRoute,
