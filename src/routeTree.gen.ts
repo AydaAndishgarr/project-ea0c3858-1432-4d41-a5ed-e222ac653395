@@ -23,6 +23,8 @@ import { Route as AdminRolesRouteImport } from './routes/admin.roles'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as ManagerIndexRouteImport } from './routes/manager.index'
+import { Route as ManagerBuildingRouteImport } from './routes/manager.building'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
 
@@ -96,6 +98,16 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const ManagerIndexRoute = ManagerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerBuildingRoute = ManagerBuildingRouteImport.update({
+  id: '/building',
+  path: '/building',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const AdminBuildingsIndexRoute = AdminBuildingsIndexRouteImport.update({
   id: '/buildings/',
   path: '/buildings/',
@@ -111,7 +123,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
-  '/manager': typeof ManagerRoute
+  '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
@@ -121,14 +133,15 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/building': typeof ManagerBuildingRoute
   '/admin/': typeof AdminIndexRoute
+  '/manager/': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/manager': typeof ManagerRoute
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
@@ -138,7 +151,9 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/building': typeof ManagerBuildingRoute
   '/admin': typeof AdminIndexRoute
+  '/manager': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings': typeof AdminBuildingsIndexRoute
 }
@@ -147,7 +162,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
-  '/manager': typeof ManagerRoute
+  '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
   '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
@@ -157,7 +172,9 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/building': typeof ManagerBuildingRoute
   '/admin/': typeof AdminIndexRoute
+  '/manager/': typeof ManagerIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
@@ -177,14 +194,15 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/building'
     | '/admin/'
+    | '/manager/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/manager'
     | '/provider'
     | '/resident'
     | '/admin/managers'
@@ -194,7 +212,9 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/building'
     | '/admin'
+    | '/manager'
     | '/admin/buildings/$id'
     | '/admin/buildings'
   id:
@@ -212,7 +232,9 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/building'
     | '/admin/'
+    | '/manager/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesById: FileRoutesById
@@ -221,7 +243,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ManagerRoute: typeof ManagerRoute
+  ManagerRoute: typeof ManagerRouteWithChildren
   ProviderRoute: typeof ProviderRoute
   ResidentRoute: typeof ResidentRoute
 }
@@ -326,6 +348,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/manager/': {
+      id: '/manager/'
+      path: '/'
+      fullPath: '/manager/'
+      preLoaderRoute: typeof ManagerIndexRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/building': {
+      id: '/manager/building'
+      path: '/building'
+      fullPath: '/manager/building'
+      preLoaderRoute: typeof ManagerBuildingRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/admin/buildings/': {
       id: '/admin/buildings/'
       path: '/buildings'
@@ -371,11 +407,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface ManagerRouteChildren {
+  ManagerBuildingRoute: typeof ManagerBuildingRoute
+  ManagerIndexRoute: typeof ManagerIndexRoute
+}
+
+const ManagerRouteChildren: ManagerRouteChildren = {
+  ManagerBuildingRoute: ManagerBuildingRoute,
+  ManagerIndexRoute: ManagerIndexRoute,
+}
+
+const ManagerRouteWithChildren =
+  ManagerRoute._addFileChildren(ManagerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
-  ManagerRoute: ManagerRoute,
+  ManagerRoute: ManagerRouteWithChildren,
   ProviderRoute: ProviderRoute,
   ResidentRoute: ResidentRoute,
 }
