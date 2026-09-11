@@ -24,10 +24,15 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin.subscriptions'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as ManagerIndexRouteImport } from './routes/manager.index'
+import { Route as ManagerAnnouncementsRouteImport } from './routes/manager.announcements'
 import { Route as ManagerBuildingRouteImport } from './routes/manager.building'
 import { Route as ManagerChargesRouteImport } from './routes/manager.charges'
 import { Route as ManagerExpensesRouteImport } from './routes/manager.expenses'
+import { Route as ManagerNotificationsRouteImport } from './routes/manager.notifications'
 import { Route as ManagerPaymentsRouteImport } from './routes/manager.payments'
+import { Route as ManagerPollsRouteImport } from './routes/manager.polls'
+import { Route as ManagerProvidersRouteImport } from './routes/manager.providers'
+import { Route as ManagerRequestsRouteImport } from './routes/manager.requests'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
@@ -108,6 +113,11 @@ const ManagerIndexRoute = ManagerIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerAnnouncementsRoute = ManagerAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerBuildingRoute = ManagerBuildingRouteImport.update({
   id: '/building',
   path: '/building',
@@ -123,9 +133,29 @@ const ManagerExpensesRoute = ManagerExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerNotificationsRoute = ManagerNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerPaymentsRoute = ManagerPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerPollsRoute = ManagerPollsRouteImport.update({
+  id: '/polls',
+  path: '/polls',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerProvidersRoute = ManagerProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerRequestsRoute = ManagerRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
   getParentRoute: () => ManagerRoute,
 } as any)
 const ManagerResidentsRoute = ManagerResidentsRouteImport.update({
@@ -163,10 +193,15 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/announcements': typeof ManagerAnnouncementsRoute
   '/manager/building': typeof ManagerBuildingRoute
   '/manager/charges': typeof ManagerChargesRoute
   '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/notifications': typeof ManagerNotificationsRoute
   '/manager/payments': typeof ManagerPaymentsRoute
+  '/manager/polls': typeof ManagerPollsRoute
+  '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
@@ -186,10 +221,15 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/announcements': typeof ManagerAnnouncementsRoute
   '/manager/building': typeof ManagerBuildingRoute
   '/manager/charges': typeof ManagerChargesRoute
   '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/notifications': typeof ManagerNotificationsRoute
   '/manager/payments': typeof ManagerPaymentsRoute
+  '/manager/polls': typeof ManagerPollsRoute
+  '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin': typeof AdminIndexRoute
@@ -212,10 +252,15 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/manager/announcements': typeof ManagerAnnouncementsRoute
   '/manager/building': typeof ManagerBuildingRoute
   '/manager/charges': typeof ManagerChargesRoute
   '/manager/expenses': typeof ManagerExpensesRoute
+  '/manager/notifications': typeof ManagerNotificationsRoute
   '/manager/payments': typeof ManagerPaymentsRoute
+  '/manager/polls': typeof ManagerPollsRoute
+  '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
@@ -239,10 +284,15 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/announcements'
     | '/manager/building'
     | '/manager/charges'
     | '/manager/expenses'
+    | '/manager/notifications'
     | '/manager/payments'
+    | '/manager/polls'
+    | '/manager/providers'
+    | '/manager/requests'
     | '/manager/residents'
     | '/manager/units'
     | '/admin/'
@@ -262,10 +312,15 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/announcements'
     | '/manager/building'
     | '/manager/charges'
     | '/manager/expenses'
+    | '/manager/notifications'
     | '/manager/payments'
+    | '/manager/polls'
+    | '/manager/providers'
+    | '/manager/requests'
     | '/manager/residents'
     | '/manager/units'
     | '/admin'
@@ -287,10 +342,15 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscriptions'
     | '/admin/users'
+    | '/manager/announcements'
     | '/manager/building'
     | '/manager/charges'
     | '/manager/expenses'
+    | '/manager/notifications'
     | '/manager/payments'
+    | '/manager/polls'
+    | '/manager/providers'
+    | '/manager/requests'
     | '/manager/residents'
     | '/manager/units'
     | '/admin/'
@@ -415,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerIndexRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/announcements': {
+      id: '/manager/announcements'
+      path: '/announcements'
+      fullPath: '/manager/announcements'
+      preLoaderRoute: typeof ManagerAnnouncementsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/building': {
       id: '/manager/building'
       path: '/building'
@@ -436,11 +503,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerExpensesRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/notifications': {
+      id: '/manager/notifications'
+      path: '/notifications'
+      fullPath: '/manager/notifications'
+      preLoaderRoute: typeof ManagerNotificationsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/payments': {
       id: '/manager/payments'
       path: '/payments'
       fullPath: '/manager/payments'
       preLoaderRoute: typeof ManagerPaymentsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/polls': {
+      id: '/manager/polls'
+      path: '/polls'
+      fullPath: '/manager/polls'
+      preLoaderRoute: typeof ManagerPollsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/providers': {
+      id: '/manager/providers'
+      path: '/providers'
+      fullPath: '/manager/providers'
+      preLoaderRoute: typeof ManagerProvidersRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/requests': {
+      id: '/manager/requests'
+      path: '/requests'
+      fullPath: '/manager/requests'
+      preLoaderRoute: typeof ManagerRequestsRouteImport
       parentRoute: typeof ManagerRoute
     }
     '/manager/residents': {
@@ -503,20 +598,30 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ManagerRouteChildren {
+  ManagerAnnouncementsRoute: typeof ManagerAnnouncementsRoute
   ManagerBuildingRoute: typeof ManagerBuildingRoute
   ManagerChargesRoute: typeof ManagerChargesRoute
   ManagerExpensesRoute: typeof ManagerExpensesRoute
+  ManagerNotificationsRoute: typeof ManagerNotificationsRoute
   ManagerPaymentsRoute: typeof ManagerPaymentsRoute
+  ManagerPollsRoute: typeof ManagerPollsRoute
+  ManagerProvidersRoute: typeof ManagerProvidersRoute
+  ManagerRequestsRoute: typeof ManagerRequestsRoute
   ManagerResidentsRoute: typeof ManagerResidentsRoute
   ManagerUnitsRoute: typeof ManagerUnitsRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
 }
 
 const ManagerRouteChildren: ManagerRouteChildren = {
+  ManagerAnnouncementsRoute: ManagerAnnouncementsRoute,
   ManagerBuildingRoute: ManagerBuildingRoute,
   ManagerChargesRoute: ManagerChargesRoute,
   ManagerExpensesRoute: ManagerExpensesRoute,
+  ManagerNotificationsRoute: ManagerNotificationsRoute,
   ManagerPaymentsRoute: ManagerPaymentsRoute,
+  ManagerPollsRoute: ManagerPollsRoute,
+  ManagerProvidersRoute: ManagerProvidersRoute,
+  ManagerRequestsRoute: ManagerRequestsRoute,
   ManagerResidentsRoute: ManagerResidentsRoute,
   ManagerUnitsRoute: ManagerUnitsRoute,
   ManagerIndexRoute: ManagerIndexRoute,
