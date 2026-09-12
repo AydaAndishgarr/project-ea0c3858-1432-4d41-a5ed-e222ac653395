@@ -32,9 +32,16 @@ import { Route as ManagerNotificationsRouteImport } from './routes/manager.notif
 import { Route as ManagerPaymentsRouteImport } from './routes/manager.payments'
 import { Route as ManagerPollsRouteImport } from './routes/manager.polls'
 import { Route as ManagerProvidersRouteImport } from './routes/manager.providers'
+import { Route as ManagerReportsRouteImport } from './routes/manager.reports'
 import { Route as ManagerRequestsRouteImport } from './routes/manager.requests'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
+import { Route as ManagerSettingsRouteImport } from './routes/manager.settings'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
+import { Route as ResidentIndexRouteImport } from './routes/resident.index'
+import { Route as ResidentChargesRouteImport } from './routes/resident.charges'
+import { Route as ResidentPaymentsRouteImport } from './routes/resident.payments'
+import { Route as ResidentRequestsRouteImport } from './routes/resident.requests'
+import { Route as ResidentUnitRouteImport } from './routes/resident.unit'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
 
@@ -153,6 +160,11 @@ const ManagerProvidersRoute = ManagerProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerReportsRoute = ManagerReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerRequestsRoute = ManagerRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
@@ -163,10 +175,40 @@ const ManagerResidentsRoute = ManagerResidentsRouteImport.update({
   path: '/residents',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerSettingsRoute = ManagerSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerUnitsRoute = ManagerUnitsRouteImport.update({
   id: '/units',
   path: '/units',
   getParentRoute: () => ManagerRoute,
+} as any)
+const ResidentIndexRoute = ResidentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentChargesRoute = ResidentChargesRouteImport.update({
+  id: '/charges',
+  path: '/charges',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentPaymentsRoute = ResidentPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentRequestsRoute = ResidentRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentUnitRoute = ResidentUnitRouteImport.update({
+  id: '/unit',
+  path: '/unit',
+  getParentRoute: () => ResidentRoute,
 } as any)
 const AdminBuildingsIndexRoute = AdminBuildingsIndexRouteImport.update({
   id: '/buildings/',
@@ -185,7 +227,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
+  '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -201,11 +243,18 @@ export interface FileRoutesByFullPath {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
@@ -213,7 +262,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -229,11 +277,18 @@ export interface FileRoutesByTo {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin': typeof AdminIndexRoute
   '/manager': typeof ManagerIndexRoute
+  '/resident': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings': typeof AdminBuildingsIndexRoute
 }
@@ -244,7 +299,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
+  '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -260,11 +315,18 @@ export interface FileRoutesById {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
@@ -292,11 +354,18 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesByTo: FileRoutesByTo
@@ -304,7 +373,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/provider'
-    | '/resident'
     | '/admin/managers'
     | '/admin/notifications'
     | '/admin/reports'
@@ -320,11 +388,18 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin'
     | '/manager'
+    | '/resident'
     | '/admin/buildings/$id'
     | '/admin/buildings'
   id:
@@ -350,11 +425,18 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesById: FileRoutesById
@@ -365,7 +447,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRouteWithChildren
   ProviderRoute: typeof ProviderRoute
-  ResidentRoute: typeof ResidentRoute
+  ResidentRoute: typeof ResidentRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -531,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerProvidersRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/reports': {
+      id: '/manager/reports'
+      path: '/reports'
+      fullPath: '/manager/reports'
+      preLoaderRoute: typeof ManagerReportsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/requests': {
       id: '/manager/requests'
       path: '/requests'
@@ -545,12 +634,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerResidentsRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/settings': {
+      id: '/manager/settings'
+      path: '/settings'
+      fullPath: '/manager/settings'
+      preLoaderRoute: typeof ManagerSettingsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/units': {
       id: '/manager/units'
       path: '/units'
       fullPath: '/manager/units'
       preLoaderRoute: typeof ManagerUnitsRouteImport
       parentRoute: typeof ManagerRoute
+    }
+    '/resident/': {
+      id: '/resident/'
+      path: '/'
+      fullPath: '/resident/'
+      preLoaderRoute: typeof ResidentIndexRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/charges': {
+      id: '/resident/charges'
+      path: '/charges'
+      fullPath: '/resident/charges'
+      preLoaderRoute: typeof ResidentChargesRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/payments': {
+      id: '/resident/payments'
+      path: '/payments'
+      fullPath: '/resident/payments'
+      preLoaderRoute: typeof ResidentPaymentsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/requests': {
+      id: '/resident/requests'
+      path: '/requests'
+      fullPath: '/resident/requests'
+      preLoaderRoute: typeof ResidentRequestsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/unit': {
+      id: '/resident/unit'
+      path: '/unit'
+      fullPath: '/resident/unit'
+      preLoaderRoute: typeof ResidentUnitRouteImport
+      parentRoute: typeof ResidentRoute
     }
     '/admin/buildings/': {
       id: '/admin/buildings/'
@@ -606,8 +737,10 @@ interface ManagerRouteChildren {
   ManagerPaymentsRoute: typeof ManagerPaymentsRoute
   ManagerPollsRoute: typeof ManagerPollsRoute
   ManagerProvidersRoute: typeof ManagerProvidersRoute
+  ManagerReportsRoute: typeof ManagerReportsRoute
   ManagerRequestsRoute: typeof ManagerRequestsRoute
   ManagerResidentsRoute: typeof ManagerResidentsRoute
+  ManagerSettingsRoute: typeof ManagerSettingsRoute
   ManagerUnitsRoute: typeof ManagerUnitsRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
 }
@@ -621,8 +754,10 @@ const ManagerRouteChildren: ManagerRouteChildren = {
   ManagerPaymentsRoute: ManagerPaymentsRoute,
   ManagerPollsRoute: ManagerPollsRoute,
   ManagerProvidersRoute: ManagerProvidersRoute,
+  ManagerReportsRoute: ManagerReportsRoute,
   ManagerRequestsRoute: ManagerRequestsRoute,
   ManagerResidentsRoute: ManagerResidentsRoute,
+  ManagerSettingsRoute: ManagerSettingsRoute,
   ManagerUnitsRoute: ManagerUnitsRoute,
   ManagerIndexRoute: ManagerIndexRoute,
 }
@@ -630,13 +765,33 @@ const ManagerRouteChildren: ManagerRouteChildren = {
 const ManagerRouteWithChildren =
   ManagerRoute._addFileChildren(ManagerRouteChildren)
 
+interface ResidentRouteChildren {
+  ResidentChargesRoute: typeof ResidentChargesRoute
+  ResidentPaymentsRoute: typeof ResidentPaymentsRoute
+  ResidentRequestsRoute: typeof ResidentRequestsRoute
+  ResidentUnitRoute: typeof ResidentUnitRoute
+  ResidentIndexRoute: typeof ResidentIndexRoute
+}
+
+const ResidentRouteChildren: ResidentRouteChildren = {
+  ResidentChargesRoute: ResidentChargesRoute,
+  ResidentPaymentsRoute: ResidentPaymentsRoute,
+  ResidentRequestsRoute: ResidentRequestsRoute,
+  ResidentUnitRoute: ResidentUnitRoute,
+  ResidentIndexRoute: ResidentIndexRoute,
+}
+
+const ResidentRouteWithChildren = ResidentRoute._addFileChildren(
+  ResidentRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRouteWithChildren,
   ProviderRoute: ProviderRoute,
-  ResidentRoute: ResidentRoute,
+  ResidentRoute: ResidentRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
