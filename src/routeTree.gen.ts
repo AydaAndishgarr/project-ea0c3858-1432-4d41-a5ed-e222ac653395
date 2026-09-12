@@ -37,6 +37,11 @@ import { Route as ManagerRequestsRouteImport } from './routes/manager.requests'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
 import { Route as ManagerSettingsRouteImport } from './routes/manager.settings'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
+import { Route as ResidentIndexRouteImport } from './routes/resident.index'
+import { Route as ResidentChargesRouteImport } from './routes/resident.charges'
+import { Route as ResidentPaymentsRouteImport } from './routes/resident.payments'
+import { Route as ResidentRequestsRouteImport } from './routes/resident.requests'
+import { Route as ResidentUnitRouteImport } from './routes/resident.unit'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
 
@@ -180,6 +185,31 @@ const ManagerUnitsRoute = ManagerUnitsRouteImport.update({
   path: '/units',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ResidentIndexRoute = ResidentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentChargesRoute = ResidentChargesRouteImport.update({
+  id: '/charges',
+  path: '/charges',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentPaymentsRoute = ResidentPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentRequestsRoute = ResidentRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentUnitRoute = ResidentUnitRouteImport.update({
+  id: '/unit',
+  path: '/unit',
+  getParentRoute: () => ResidentRoute,
+} as any)
 const AdminBuildingsIndexRoute = AdminBuildingsIndexRouteImport.update({
   id: '/buildings/',
   path: '/buildings/',
@@ -197,7 +227,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
+  '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -218,8 +248,13 @@ export interface FileRoutesByFullPath {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
@@ -227,7 +262,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -248,8 +282,13 @@ export interface FileRoutesByTo {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin': typeof AdminIndexRoute
   '/manager': typeof ManagerIndexRoute
+  '/resident': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings': typeof AdminBuildingsIndexRoute
 }
@@ -260,7 +299,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
   '/provider': typeof ProviderRoute
-  '/resident': typeof ResidentRoute
+  '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -281,8 +320,13 @@ export interface FileRoutesById {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/resident/charges': typeof ResidentChargesRoute
+  '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
 }
@@ -315,8 +359,13 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesByTo: FileRoutesByTo
@@ -324,7 +373,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/provider'
-    | '/resident'
     | '/admin/managers'
     | '/admin/notifications'
     | '/admin/reports'
@@ -345,8 +393,13 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin'
     | '/manager'
+    | '/resident'
     | '/admin/buildings/$id'
     | '/admin/buildings'
   id:
@@ -377,8 +430,13 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/resident/charges'
+    | '/resident/payments'
+    | '/resident/requests'
+    | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
   fileRoutesById: FileRoutesById
@@ -389,7 +447,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRouteWithChildren
   ProviderRoute: typeof ProviderRoute
-  ResidentRoute: typeof ResidentRoute
+  ResidentRoute: typeof ResidentRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -590,6 +648,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerUnitsRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/resident/': {
+      id: '/resident/'
+      path: '/'
+      fullPath: '/resident/'
+      preLoaderRoute: typeof ResidentIndexRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/charges': {
+      id: '/resident/charges'
+      path: '/charges'
+      fullPath: '/resident/charges'
+      preLoaderRoute: typeof ResidentChargesRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/payments': {
+      id: '/resident/payments'
+      path: '/payments'
+      fullPath: '/resident/payments'
+      preLoaderRoute: typeof ResidentPaymentsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/requests': {
+      id: '/resident/requests'
+      path: '/requests'
+      fullPath: '/resident/requests'
+      preLoaderRoute: typeof ResidentRequestsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/unit': {
+      id: '/resident/unit'
+      path: '/unit'
+      fullPath: '/resident/unit'
+      preLoaderRoute: typeof ResidentUnitRouteImport
+      parentRoute: typeof ResidentRoute
+    }
     '/admin/buildings/': {
       id: '/admin/buildings/'
       path: '/buildings'
@@ -672,13 +765,33 @@ const ManagerRouteChildren: ManagerRouteChildren = {
 const ManagerRouteWithChildren =
   ManagerRoute._addFileChildren(ManagerRouteChildren)
 
+interface ResidentRouteChildren {
+  ResidentChargesRoute: typeof ResidentChargesRoute
+  ResidentPaymentsRoute: typeof ResidentPaymentsRoute
+  ResidentRequestsRoute: typeof ResidentRequestsRoute
+  ResidentUnitRoute: typeof ResidentUnitRoute
+  ResidentIndexRoute: typeof ResidentIndexRoute
+}
+
+const ResidentRouteChildren: ResidentRouteChildren = {
+  ResidentChargesRoute: ResidentChargesRoute,
+  ResidentPaymentsRoute: ResidentPaymentsRoute,
+  ResidentRequestsRoute: ResidentRequestsRoute,
+  ResidentUnitRoute: ResidentUnitRoute,
+  ResidentIndexRoute: ResidentIndexRoute,
+}
+
+const ResidentRouteWithChildren = ResidentRoute._addFileChildren(
+  ResidentRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRouteWithChildren,
   ProviderRoute: ProviderRoute,
-  ResidentRoute: ResidentRoute,
+  ResidentRoute: ResidentRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
