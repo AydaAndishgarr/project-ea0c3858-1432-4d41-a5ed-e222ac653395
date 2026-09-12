@@ -32,8 +32,10 @@ import { Route as ManagerNotificationsRouteImport } from './routes/manager.notif
 import { Route as ManagerPaymentsRouteImport } from './routes/manager.payments'
 import { Route as ManagerPollsRouteImport } from './routes/manager.polls'
 import { Route as ManagerProvidersRouteImport } from './routes/manager.providers'
+import { Route as ManagerReportsRouteImport } from './routes/manager.reports'
 import { Route as ManagerRequestsRouteImport } from './routes/manager.requests'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
+import { Route as ManagerSettingsRouteImport } from './routes/manager.settings'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
@@ -153,6 +155,11 @@ const ManagerProvidersRoute = ManagerProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ManagerReportsRoute = ManagerReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ManagerRoute,
+} as any)
 const ManagerRequestsRoute = ManagerRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
@@ -161,6 +168,11 @@ const ManagerRequestsRoute = ManagerRequestsRouteImport.update({
 const ManagerResidentsRoute = ManagerResidentsRouteImport.update({
   id: '/residents',
   path: '/residents',
+  getParentRoute: () => ManagerRoute,
+} as any)
+const ManagerSettingsRoute = ManagerSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => ManagerRoute,
 } as any)
 const ManagerUnitsRoute = ManagerUnitsRouteImport.update({
@@ -201,8 +213,10 @@ export interface FileRoutesByFullPath {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
@@ -229,8 +243,10 @@ export interface FileRoutesByTo {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin': typeof AdminIndexRoute
   '/manager': typeof ManagerIndexRoute
@@ -260,8 +276,10 @@ export interface FileRoutesById {
   '/manager/payments': typeof ManagerPaymentsRoute
   '/manager/polls': typeof ManagerPollsRoute
   '/manager/providers': typeof ManagerProvidersRoute
+  '/manager/reports': typeof ManagerReportsRoute
   '/manager/requests': typeof ManagerRequestsRoute
   '/manager/residents': typeof ManagerResidentsRoute
+  '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
@@ -292,8 +310,10 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
     | '/admin/'
     | '/manager/'
@@ -320,8 +340,10 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
     | '/admin'
     | '/manager'
@@ -350,8 +372,10 @@ export interface FileRouteTypes {
     | '/manager/payments'
     | '/manager/polls'
     | '/manager/providers'
+    | '/manager/reports'
     | '/manager/requests'
     | '/manager/residents'
+    | '/manager/settings'
     | '/manager/units'
     | '/admin/'
     | '/manager/'
@@ -531,6 +555,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerProvidersRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/manager/reports': {
+      id: '/manager/reports'
+      path: '/reports'
+      fullPath: '/manager/reports'
+      preLoaderRoute: typeof ManagerReportsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
     '/manager/requests': {
       id: '/manager/requests'
       path: '/requests'
@@ -543,6 +574,13 @@ declare module '@tanstack/react-router' {
       path: '/residents'
       fullPath: '/manager/residents'
       preLoaderRoute: typeof ManagerResidentsRouteImport
+      parentRoute: typeof ManagerRoute
+    }
+    '/manager/settings': {
+      id: '/manager/settings'
+      path: '/settings'
+      fullPath: '/manager/settings'
+      preLoaderRoute: typeof ManagerSettingsRouteImport
       parentRoute: typeof ManagerRoute
     }
     '/manager/units': {
@@ -606,8 +644,10 @@ interface ManagerRouteChildren {
   ManagerPaymentsRoute: typeof ManagerPaymentsRoute
   ManagerPollsRoute: typeof ManagerPollsRoute
   ManagerProvidersRoute: typeof ManagerProvidersRoute
+  ManagerReportsRoute: typeof ManagerReportsRoute
   ManagerRequestsRoute: typeof ManagerRequestsRoute
   ManagerResidentsRoute: typeof ManagerResidentsRoute
+  ManagerSettingsRoute: typeof ManagerSettingsRoute
   ManagerUnitsRoute: typeof ManagerUnitsRoute
   ManagerIndexRoute: typeof ManagerIndexRoute
 }
@@ -621,8 +661,10 @@ const ManagerRouteChildren: ManagerRouteChildren = {
   ManagerPaymentsRoute: ManagerPaymentsRoute,
   ManagerPollsRoute: ManagerPollsRoute,
   ManagerProvidersRoute: ManagerProvidersRoute,
+  ManagerReportsRoute: ManagerReportsRoute,
   ManagerRequestsRoute: ManagerRequestsRoute,
   ManagerResidentsRoute: ManagerResidentsRoute,
+  ManagerSettingsRoute: ManagerSettingsRoute,
   ManagerUnitsRoute: ManagerUnitsRoute,
   ManagerIndexRoute: ManagerIndexRoute,
 }
