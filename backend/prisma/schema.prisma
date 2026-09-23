@@ -1,0 +1,633 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  RESIDENT
+  PROVIDER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BuildingStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BuildingType {
+  RESIDENTIAL
+  OFFICE
+  COMMERCIAL
+  MIXED
+}
+
+enum PlanType {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PENDING_RENEWAL
+  EXPIRED
+}
+
+enum BuildingMemberRole {
+  MANAGER
+  RESIDENT
+}
+
+enum OccupancyRole {
+  OWNER
+  TENANT
+  OWNER_OCCUPANT
+}
+
+enum UnitStatus {
+  OCCUPIED
+  VACANT
+  UNDER_RENOVATION
+}
+
+enum ChargeType {
+  FIXED
+  VARIABLE
+  REPAIR
+  SERVICE
+  OTHER
+}
+
+enum ChargeStatus {
+  PAID
+  UNPAID
+  OVERDUE
+}
+
+enum PaymentMethod {
+  CARD
+  TRANSFER
+  CASH
+}
+
+enum PaymentStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+enum ExpenseCategory {
+  REPAIR
+  CLEANING
+  UTILITIES
+  SALARY
+  FACILITIES
+  OTHER
+}
+
+enum ExpenseStatus {
+  PAID
+  PENDING
+}
+
+enum RequestStatus {
+  NEW
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum RequestCategory {
+  ELECTRICITY
+  PLUMBING
+  ELEVATOR
+  CLEANING
+  FACILITIES
+  INTERNET
+  OTHER
+}
+
+enum RequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum RequestEventType {
+  CREATED
+  ACCEPTED
+  REJECTED
+  STARTED
+  COMPLETED
+  CANCELLED
+  NOTE_ADDED
+}
+
+enum SuggestionStatus {
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+enum NotificationType {
+  PAYMENT
+  CHARGE
+  REPAIR
+  ANNOUNCEMENT
+  POLL
+  SERVICE_REQUEST
+}
+
+enum NotificationAudience {
+  ALL
+  ADMIN
+  MANAGER
+  RESIDENT
+  PROVIDER
+}
+
+enum SettlementStatus {
+  SETTLED
+  PENDING
+}
+
+enum Weekday {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum CurrencyCode {
+  TOMAN
+  RIAL
+}
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  phone        String     @unique
+  passwordHash String     @map("password_hash")
+  fullName     String     @map("full_name")
+  role         Role
+  status       UserStatus @default(ACTIVE)
+  lastSeenAt   DateTime?  @map("last_seen_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  managedBuildings         Building[]         @relation("BuildingManager")
+  memberships              BuildingMember[]
+  occupancies              UnitOccupancy[]
+  billedCharges            Charge[]           @relation("ChargeBilledUser")
+  payments                 Payment[]
+  requestedServiceRequests ServiceRequest[]   @relation("ServiceRequestRequester")
+  requestEvents            RequestEvent[]
+  announcements            Announcement[]
+  pollVotes                PollVote[]
+  suggestions              Suggestion[]
+  suggestionLikes          SuggestionLike[]
+  notifications            Notification[]
+  authoredReviews          Review[]           @relation("ReviewAuthor")
+  provider                 Provider?
+  createdExpenses          Expense[]          @relation("ExpenseCreatedBy")
+
+  @@index([role, status])
+  @@map("users")
+}
+
+model Building {
+  id        String         @id @default(uuid()) @db.Uuid
+  name      String
+  address   String
+  type      BuildingType
+  status    BuildingStatus @default(ACTIVE)
+  managerId String         @map("manager_id") @db.Uuid
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  manager         User              @relation("BuildingManager", fields: [managerId], references: [id], onDelete: Restrict)
+  members         BuildingMember[]
+  units           Unit[]
+  subscriptions   Subscription[]
+  charges         Charge[]
+  expenses        Expense[]
+  serviceRequests ServiceRequest[]
+  announcements   Announcement[]
+  polls           Poll[]
+  suggestions     Suggestion[]
+  notifications   Notification[]
+  settings        BuildingSettings?
+
+  @@index([managerId])
+  @@index([status])
+  @@map("buildings")
+}
+
+model BuildingMember {
+  id         String             @id @default(uuid()) @db.Uuid
+  buildingId String             @map("building_id") @db.Uuid
+  userId     String             @map("user_id") @db.Uuid
+  role       BuildingMemberRole
+  createdAt  DateTime           @default(now()) @map("created_at")
+
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([buildingId, userId])
+  @@index([userId])
+  @@map("building_members")
+}
+
+model Unit {
+  id          String     @id @default(uuid()) @db.Uuid
+  buildingId  String     @map("building_id") @db.Uuid
+  number      String
+  floor       Int
+  areaSqm     Int        @map("area_sqm")
+  peopleCount Int        @default(0) @map("people_count")
+  status      UnitStatus @default(VACANT)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  building        Building         @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  occupancies     UnitOccupancy[]
+  charges         Charge[]
+  serviceRequests ServiceRequest[]
+
+  @@unique([buildingId, number])
+  @@index([status])
+  @@map("units")
+}
+
+model UnitOccupancy {
+  id        String         @id @default(uuid()) @db.Uuid
+  unitId    String         @map("unit_id") @db.Uuid
+  userId    String         @map("user_id") @db.Uuid
+  role      OccupancyRole
+  startedAt DateTime       @default(now()) @map("started_at")
+  endedAt   DateTime?      @map("ended_at")
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([unitId, endedAt])
+  @@index([userId, endedAt])
+  @@map("unit_occupancies")
+}
+
+model Subscription {
+  id          String             @id @default(uuid()) @db.Uuid
+  buildingId  String             @map("building_id") @db.Uuid
+  plan        PlanType
+  priceToman  Int                @map("price_toman")
+  startedAt   DateTime           @map("started_at")
+  expiresAt   DateTime           @map("expires_at")
+  status      SubscriptionStatus @default(ACTIVE)
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@index([buildingId, status])
+  @@index([expiresAt])
+  @@map("subscriptions")
+}
+
+model Charge {
+  id           String       @id @default(uuid()) @db.Uuid
+  buildingId   String       @map("building_id") @db.Uuid
+  unitId       String       @map("unit_id") @db.Uuid
+  billedUserId String       @map("billed_user_id") @db.Uuid
+  title        String
+  type         ChargeType
+  amountToman  Int          @map("amount_toman")
+  dueDate      DateTime     @map("due_date") @db.Date
+  status       ChargeStatus @default(UNPAID)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  building   Building  @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  unit       Unit      @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  billedUser User      @relation("ChargeBilledUser", fields: [billedUserId], references: [id], onDelete: Restrict)
+  payments   Payment[]
+
+  @@index([buildingId, status])
+  @@index([unitId, status])
+  @@index([billedUserId])
+  @@index([dueDate])
+  @@map("charges")
+}
+
+model Payment {
+  id          String        @id @default(uuid()) @db.Uuid
+  chargeId    String        @map("charge_id") @db.Uuid
+  payerUserId String        @map("payer_user_id") @db.Uuid
+  amountToman Int           @map("amount_toman")
+  method      PaymentMethod
+  status      PaymentStatus @default(PENDING)
+  receiptRef  String?       @map("receipt_ref")
+  paidAt      DateTime?     @map("paid_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  charge Charge @relation(fields: [chargeId], references: [id], onDelete: Restrict)
+  payer  User   @relation(fields: [payerUserId], references: [id], onDelete: Restrict)
+
+  @@index([chargeId, status])
+  @@index([payerUserId])
+  @@map("payments")
+}
+
+model Expense {
+  id          String          @id @default(uuid()) @db.Uuid
+  buildingId  String          @map("building_id") @db.Uuid
+  createdById String?         @map("created_by_id") @db.Uuid
+  title       String
+  category    ExpenseCategory
+  amountToman Int             @map("amount_toman")
+  incurredAt  DateTime        @map("incurred_at") @db.Date
+  description String          @default("")
+  status      ExpenseStatus   @default(PENDING)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  building  Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  createdBy User?    @relation("ExpenseCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([buildingId, status])
+  @@index([incurredAt])
+  @@map("expenses")
+}
+
+model Provider {
+  id          String          @id @default(uuid()) @db.Uuid
+  userId      String          @unique @map("user_id") @db.Uuid
+  specialty   RequestCategory
+  ratingAvg   Decimal         @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  jobsCount   Int             @default(0) @map("jobs_count")
+  status      UserStatus      @default(ACTIVE)
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceRequests ServiceRequest[]
+  settlements     Settlement[]
+  reviews         Review[]
+  workSlots       WorkSlot[]
+
+  @@index([specialty, status])
+  @@map("providers")
+}
+
+model ServiceRequest {
+  id            String          @id @default(uuid()) @db.Uuid
+  buildingId    String          @map("building_id") @db.Uuid
+  unitId        String?         @map("unit_id") @db.Uuid
+  requesterId   String          @map("requester_id") @db.Uuid
+  providerId    String?         @map("provider_id") @db.Uuid
+  title         String
+  category      RequestCategory
+  description   String
+  priority      RequestPriority @default(MEDIUM)
+  preferredTime String?         @map("preferred_time")
+  status        RequestStatus   @default(NEW)
+  amountToman   Int             @default(0) @map("amount_toman")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  building  Building       @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  unit      Unit?          @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  requester User           @relation("ServiceRequestRequester", fields: [requesterId], references: [id], onDelete: Restrict)
+  provider  Provider?      @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  events    RequestEvent[]
+  reviews   Review[]
+
+  @@index([buildingId, status])
+  @@index([providerId, status])
+  @@index([requesterId])
+  @@map("service_requests")
+}
+
+model RequestEvent {
+  id               String           @id @default(uuid()) @db.Uuid
+  serviceRequestId String           @map("service_request_id") @db.Uuid
+  actorUserId      String?          @map("actor_user_id") @db.Uuid
+  type             RequestEventType
+  note             String?
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  serviceRequest ServiceRequest @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  actor          User?          @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([serviceRequestId, createdAt])
+  @@map("request_events")
+}
+
+model Announcement {
+  id         String   @id @default(uuid()) @db.Uuid
+  buildingId String   @map("building_id") @db.Uuid
+  authorId   String   @map("author_id") @db.Uuid
+  title      String
+  body       String
+  pinned     Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  author   User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([buildingId, pinned, createdAt])
+  @@map("announcements")
+}
+
+model Poll {
+  id          String   @id @default(uuid()) @db.Uuid
+  buildingId  String   @map("building_id") @db.Uuid
+  question    String
+  description String   @default("")
+  closed      Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  building Building     @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  options  PollOption[]
+  votes    PollVote[]
+
+  @@index([buildingId, closed])
+  @@map("polls")
+}
+
+model PollOption {
+  id        String @id @default(uuid()) @db.Uuid
+  pollId    String @map("poll_id") @db.Uuid
+  label     String
+  sortOrder Int    @default(0) @map("sort_order")
+
+  poll  Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes PollVote[]
+
+  @@index([pollId, sortOrder])
+  @@map("poll_options")
+}
+
+model PollVote {
+  id        String   @id @default(uuid()) @db.Uuid
+  pollId    String   @map("poll_id") @db.Uuid
+  optionId  String   @map("option_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+  @@index([optionId])
+  @@map("poll_votes")
+}
+
+model Suggestion {
+  id         String           @id @default(uuid()) @db.Uuid
+  buildingId String           @map("building_id") @db.Uuid
+  authorId   String           @map("author_id") @db.Uuid
+  title      String
+  body       String
+  status     SuggestionStatus @default(UNDER_REVIEW)
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
+
+  building Building         @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  author   User             @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  likes    SuggestionLike[]
+
+  @@index([buildingId, status])
+  @@map("suggestions")
+}
+
+model SuggestionLike {
+  id           String   @id @default(uuid()) @db.Uuid
+  suggestionId String   @map("suggestion_id") @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  suggestion Suggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([suggestionId, userId])
+  @@map("suggestion_likes")
+}
+
+model Notification {
+  id         String                @id @default(uuid()) @db.Uuid
+  userId     String                @map("user_id") @db.Uuid
+  buildingId String?               @map("building_id") @db.Uuid
+  type       NotificationType
+  audience   NotificationAudience  @default(ALL)
+  title      String
+  body       String
+  isRead     Boolean               @default(false) @map("is_read")
+  createdAt  DateTime              @default(now()) @map("created_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  building Building? @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@index([buildingId])
+  @@map("notifications")
+}
+
+model Settlement {
+  id              String           @id @default(uuid()) @db.Uuid
+  providerId      String           @map("provider_id") @db.Uuid
+  amountToman     Int              @map("amount_toman")
+  commissionToman Int              @map("commission_toman")
+  status          SettlementStatus @default(PENDING)
+  settledAt       DateTime?        @map("settled_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Restrict)
+
+  @@index([providerId, status])
+  @@map("settlements")
+}
+
+model Review {
+  id               String   @id @default(uuid()) @db.Uuid
+  providerId       String   @map("provider_id") @db.Uuid
+  authorId         String   @map("author_id") @db.Uuid
+  serviceRequestId String?  @map("service_request_id") @db.Uuid
+  rating           Int
+  comment          String
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  provider       Provider        @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  author         User            @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  serviceRequest ServiceRequest? @relation(fields: [serviceRequestId], references: [id], onDelete: SetNull)
+
+  @@index([providerId])
+  @@index([authorId])
+  @@map("reviews")
+}
+
+model WorkSlot {
+  id         String  @id @default(uuid()) @db.Uuid
+  providerId String  @map("provider_id") @db.Uuid
+  weekday    Weekday
+  fromTime   String  @map("from_time")
+  toTime     String  @map("to_time")
+  available  Boolean @default(true)
+
+  provider Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, weekday])
+  @@map("work_slots")
+}
+
+model PlatformSettings {
+  id                        String       @id @default(uuid()) @db.Uuid
+  key                       String       @unique @default("default")
+  platformName              String       @map("platform_name")
+  supportPhone              String       @map("support_phone")
+  supportEmail              String       @map("support_email")
+  currency                  CurrencyCode @default(TOMAN)
+  emailNotificationsEnabled Boolean      @default(true) @map("email_notifications_enabled")
+  smsNotificationsEnabled   Boolean      @default(false) @map("sms_notifications_enabled")
+  autoRenewReminderEnabled  Boolean      @default(true) @map("auto_renew_reminder_enabled")
+  updatedAt                 DateTime     @updatedAt @map("updated_at")
+
+  @@map("platform_settings")
+}
+
+model BuildingSettings {
+  id                 String       @id @default(uuid()) @db.Uuid
+  buildingId         String       @unique @map("building_id") @db.Uuid
+  baseChargeToman    Int          @map("base_charge_toman")
+  dueDay             Int          @map("due_day")
+  lateFeePercent     Decimal      @map("late_fee_percent") @db.Decimal(5, 2)
+  currency           CurrencyCode @default(TOMAN)
+  smsReminderEnabled Boolean      @default(true) @map("sms_reminder_enabled")
+  pushReminderEnabled Boolean     @default(true) @map("push_reminder_enabled")
+  autoIssueEnabled   Boolean      @default(false) @map("auto_issue_enabled")
+  debtAlertEnabled   Boolean      @default(true) @map("debt_alert_enabled")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@map("building_settings")
+}

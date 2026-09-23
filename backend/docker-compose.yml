@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bms-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: bms
+      POSTGRES_PASSWORD: bms
+      POSTGRES_DB: bms
+    volumes:
+      - bms_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bms -d bms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  bms_pg_data:
