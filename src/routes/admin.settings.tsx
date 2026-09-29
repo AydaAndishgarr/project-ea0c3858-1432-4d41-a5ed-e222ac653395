@@ -17,7 +17,7 @@ export const Route = createFileRoute("/admin/settings")({
       { title: "تنظیمات | پنل مدیر کل" },
       { name: "description", content: "تنظیمات عمومی سامانه، اعلان‌ها و بازنشانی داده‌های نمایشی." },
       { property: "og:title", content: "تنظیمات سامانه" },
-      { property: "og:description", content: "پیکربندی عمومی سامانه مدیریت ساختمان." },
+      { property: "og:description", content: "پیکربندی عمومی خانه یار." },
     ],
   }),
   component: AdminSettings,
@@ -26,9 +26,9 @@ export const Route = createFileRoute("/admin/settings")({
 function AdminSettings() {
   const { reset } = useApp();
   const [form, setForm] = useState({
-    name: "سامانه مدیریت ساختمان",
+    name: "خانه یار",
     support: "۰۲۱-۹۱۰۰۲۲۳۳",
-    email: "info@bms-demo.ir",
+    email: "info@khaneyar.ir",
     currency: "تومان",
   });
   const [toggles, setToggles] = useState({ email: true, sms: false, autoRenew: true });

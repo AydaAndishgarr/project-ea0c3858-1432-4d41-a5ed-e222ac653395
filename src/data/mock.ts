@@ -124,7 +124,7 @@ export const subscriptions: Subscription[] = [
 ];
 
 export const residents: Resident[] = [
-  { id: "r1", name: "نازنین شریفی", phone: "۰۹۱۲۱۱۲۲۳۳۴", type: "مالک ساکن", unitNumber: "۱۰۱", status: "فعال", debt: 0, email: "sharifi@mail.ir" },
+  { id: "r1", name: "نازنین شریفی", phone: "۰۹۱۲۱۱۲۲۳۳۴", type: "مالک ساکن", unitNumber: "۱۰۱", status: "فعال", debt: 780000, email: "sharifi@mail.ir" },
   { id: "r2", name: "کاوه فرهادی", phone: "۰۹۳۶۷۷۸۸۹۹۰", type: "مستأجر", unitNumber: "۱۰۲", status: "فعال", debt: 1850000 },
   { id: "r3", name: "الهام رستمی", phone: "۰۹۱۲۵۵۶۶۷۷۸", type: "مالک", unitNumber: "۲۰۱", status: "فعال", debt: 0 },
   { id: "r4", name: "سعید محمودی", phone: "۰۹۱۹۳۳۴۴۵۵۶", type: "مستأجر", unitNumber: "۲۰۲", status: "فعال", debt: 3200000 },
@@ -137,7 +137,7 @@ export const residents: Resident[] = [
 ];
 
 export const units: Unit[] = [
-  { id: "un1", number: "۱۰۱", floor: 1, area: 96, ownerId: "r1", tenantId: null, peopleCount: 3, paymentStatus: "تسویه", status: "سکونت" },
+  { id: "un1", number: "۱۰۱", floor: 1, area: 96, ownerId: "r1", tenantId: null, peopleCount: 3, paymentStatus: "بدهکار", status: "سکونت" },
   { id: "un2", number: "۱۰۲", floor: 1, area: 88, ownerId: "r3", tenantId: "r2", peopleCount: 2, paymentStatus: "بدهکار", status: "سکونت" },
   { id: "un3", number: "۲۰۱", floor: 2, area: 110, ownerId: "r3", tenantId: null, peopleCount: 4, paymentStatus: "تسویه", status: "سکونت" },
   { id: "un4", number: "۲۰۲", floor: 2, area: 88, ownerId: "r6", tenantId: "r4", peopleCount: 3, paymentStatus: "بدهکار", status: "سکونت" },
@@ -152,6 +152,7 @@ export const units: Unit[] = [
 
 export const charges: Charge[] = [
   { id: "c1", title: "شارژ ماهانه شهریور", type: "شارژ ثابت", unitNumber: "۱۰۱", residentName: "نازنین شریفی", amount: 1450000, createdAt: "۱۴۰۴/۰۶/۰۱", dueDate: "۱۴۰۴/۰۶/۱۵", status: "پرداخت شده" },
+  { id: "c1b", title: "هزینه تعمیر روشنایی مشاعات", type: "هزینه تعمیرات", unitNumber: "۱۰۱", residentName: "نازنین شریفی", amount: 780000, createdAt: "۱۴۰۴/۰۶/۱۰", dueDate: "۱۴۰۴/۰۶/۲۵", status: "پرداخت نشده" },
   { id: "c2", title: "شارژ ماهانه شهریور", type: "شارژ ثابت", unitNumber: "۱۰۲", residentName: "کاوه فرهادی", amount: 1450000, createdAt: "۱۴۰۴/۰۶/۰۱", dueDate: "۱۴۰۴/۰۶/۱۵", status: "پرداخت نشده" },
   { id: "c3", title: "تعمیر موتورخانه", type: "هزینه تعمیرات", unitNumber: "۱۰۲", residentName: "کاوه فرهادی", amount: 400000, createdAt: "۱۴۰۴/۰۵/۱۰", dueDate: "۱۴۰۴/۰۵/۲۵", status: "سررسید گذشته" },
   { id: "c4", title: "شارژ ماهانه شهریور", type: "شارژ ثابت", unitNumber: "۲۰۱", residentName: "الهام رستمی", amount: 1700000, createdAt: "۱۴۰۴/۰۶/۰۱", dueDate: "۱۴۰۴/۰۶/۱۵", status: "پرداخت شده" },

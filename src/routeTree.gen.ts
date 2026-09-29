@@ -37,10 +37,24 @@ import { Route as ManagerRequestsRouteImport } from './routes/manager.requests'
 import { Route as ManagerResidentsRouteImport } from './routes/manager.residents'
 import { Route as ManagerSettingsRouteImport } from './routes/manager.settings'
 import { Route as ManagerUnitsRouteImport } from './routes/manager.units'
+import { Route as ProviderIndexRouteImport } from './routes/provider.index'
+import { Route as ProviderCalendarRouteImport } from './routes/provider.calendar'
+import { Route as ProviderHoursRouteImport } from './routes/provider.hours'
+import { Route as ProviderIncomeRouteImport } from './routes/provider.income'
+import { Route as ProviderNotificationsRouteImport } from './routes/provider.notifications'
+import { Route as ProviderProfileRouteImport } from './routes/provider.profile'
+import { Route as ProviderRequestsRouteImport } from './routes/provider.requests'
+import { Route as ProviderReviewsRouteImport } from './routes/provider.reviews'
+import { Route as ProviderSettlementsRouteImport } from './routes/provider.settlements'
 import { Route as ResidentIndexRouteImport } from './routes/resident.index'
+import { Route as ResidentAnnouncementsRouteImport } from './routes/resident.announcements'
 import { Route as ResidentChargesRouteImport } from './routes/resident.charges'
+import { Route as ResidentNotificationsRouteImport } from './routes/resident.notifications'
 import { Route as ResidentPaymentsRouteImport } from './routes/resident.payments'
+import { Route as ResidentPollsRouteImport } from './routes/resident.polls'
+import { Route as ResidentProfileRouteImport } from './routes/resident.profile'
 import { Route as ResidentRequestsRouteImport } from './routes/resident.requests'
+import { Route as ResidentSuggestionsRouteImport } from './routes/resident.suggestions'
 import { Route as ResidentUnitRouteImport } from './routes/resident.unit'
 import { Route as AdminBuildingsIndexRouteImport } from './routes/admin.buildings.index'
 import { Route as AdminBuildingsIdRouteImport } from './routes/admin.buildings.$id'
@@ -185,9 +199,59 @@ const ManagerUnitsRoute = ManagerUnitsRouteImport.update({
   path: '/units',
   getParentRoute: () => ManagerRoute,
 } as any)
+const ProviderIndexRoute = ProviderIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderCalendarRoute = ProviderCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderHoursRoute = ProviderHoursRouteImport.update({
+  id: '/hours',
+  path: '/hours',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderIncomeRoute = ProviderIncomeRouteImport.update({
+  id: '/income',
+  path: '/income',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderNotificationsRoute = ProviderNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderProfileRoute = ProviderProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderRequestsRoute = ProviderRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderReviewsRoute = ProviderReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderSettlementsRoute = ProviderSettlementsRouteImport.update({
+  id: '/settlements',
+  path: '/settlements',
+  getParentRoute: () => ProviderRoute,
+} as any)
 const ResidentIndexRoute = ResidentIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentAnnouncementsRoute = ResidentAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => ResidentRoute,
 } as any)
 const ResidentChargesRoute = ResidentChargesRouteImport.update({
@@ -195,14 +259,34 @@ const ResidentChargesRoute = ResidentChargesRouteImport.update({
   path: '/charges',
   getParentRoute: () => ResidentRoute,
 } as any)
+const ResidentNotificationsRoute = ResidentNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ResidentRoute,
+} as any)
 const ResidentPaymentsRoute = ResidentPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
   getParentRoute: () => ResidentRoute,
 } as any)
+const ResidentPollsRoute = ResidentPollsRouteImport.update({
+  id: '/polls',
+  path: '/polls',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentProfileRoute = ResidentProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => ResidentRoute,
+} as any)
 const ResidentRequestsRoute = ResidentRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
+  getParentRoute: () => ResidentRoute,
+} as any)
+const ResidentSuggestionsRoute = ResidentSuggestionsRouteImport.update({
+  id: '/suggestions',
+  path: '/suggestions',
   getParentRoute: () => ResidentRoute,
 } as any)
 const ResidentUnitRoute = ResidentUnitRouteImport.update({
@@ -226,7 +310,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
-  '/provider': typeof ProviderRoute
+  '/provider': typeof ProviderRouteWithChildren
   '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -248,12 +332,26 @@ export interface FileRoutesByFullPath {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/hours': typeof ProviderHoursRoute
+  '/provider/income': typeof ProviderIncomeRoute
+  '/provider/notifications': typeof ProviderNotificationsRoute
+  '/provider/profile': typeof ProviderProfileRoute
+  '/provider/requests': typeof ProviderRequestsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/settlements': typeof ProviderSettlementsRoute
+  '/resident/announcements': typeof ResidentAnnouncementsRoute
   '/resident/charges': typeof ResidentChargesRoute
+  '/resident/notifications': typeof ResidentNotificationsRoute
   '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/polls': typeof ResidentPollsRoute
+  '/resident/profile': typeof ResidentProfileRoute
   '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/suggestions': typeof ResidentSuggestionsRoute
   '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/provider/': typeof ProviderIndexRoute
   '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
@@ -261,7 +359,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/provider': typeof ProviderRoute
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -282,12 +379,26 @@ export interface FileRoutesByTo {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/hours': typeof ProviderHoursRoute
+  '/provider/income': typeof ProviderIncomeRoute
+  '/provider/notifications': typeof ProviderNotificationsRoute
+  '/provider/profile': typeof ProviderProfileRoute
+  '/provider/requests': typeof ProviderRequestsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/settlements': typeof ProviderSettlementsRoute
+  '/resident/announcements': typeof ResidentAnnouncementsRoute
   '/resident/charges': typeof ResidentChargesRoute
+  '/resident/notifications': typeof ResidentNotificationsRoute
   '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/polls': typeof ResidentPollsRoute
+  '/resident/profile': typeof ResidentProfileRoute
   '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/suggestions': typeof ResidentSuggestionsRoute
   '/resident/unit': typeof ResidentUnitRoute
   '/admin': typeof AdminIndexRoute
   '/manager': typeof ManagerIndexRoute
+  '/provider': typeof ProviderIndexRoute
   '/resident': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings': typeof AdminBuildingsIndexRoute
@@ -298,7 +409,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRouteWithChildren
-  '/provider': typeof ProviderRoute
+  '/provider': typeof ProviderRouteWithChildren
   '/resident': typeof ResidentRouteWithChildren
   '/admin/managers': typeof AdminManagersRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -320,12 +431,26 @@ export interface FileRoutesById {
   '/manager/residents': typeof ManagerResidentsRoute
   '/manager/settings': typeof ManagerSettingsRoute
   '/manager/units': typeof ManagerUnitsRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/hours': typeof ProviderHoursRoute
+  '/provider/income': typeof ProviderIncomeRoute
+  '/provider/notifications': typeof ProviderNotificationsRoute
+  '/provider/profile': typeof ProviderProfileRoute
+  '/provider/requests': typeof ProviderRequestsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/settlements': typeof ProviderSettlementsRoute
+  '/resident/announcements': typeof ResidentAnnouncementsRoute
   '/resident/charges': typeof ResidentChargesRoute
+  '/resident/notifications': typeof ResidentNotificationsRoute
   '/resident/payments': typeof ResidentPaymentsRoute
+  '/resident/polls': typeof ResidentPollsRoute
+  '/resident/profile': typeof ResidentProfileRoute
   '/resident/requests': typeof ResidentRequestsRoute
+  '/resident/suggestions': typeof ResidentSuggestionsRoute
   '/resident/unit': typeof ResidentUnitRoute
   '/admin/': typeof AdminIndexRoute
   '/manager/': typeof ManagerIndexRoute
+  '/provider/': typeof ProviderIndexRoute
   '/resident/': typeof ResidentIndexRoute
   '/admin/buildings/$id': typeof AdminBuildingsIdRoute
   '/admin/buildings/': typeof AdminBuildingsIndexRoute
@@ -359,12 +484,26 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/provider/calendar'
+    | '/provider/hours'
+    | '/provider/income'
+    | '/provider/notifications'
+    | '/provider/profile'
+    | '/provider/requests'
+    | '/provider/reviews'
+    | '/provider/settlements'
+    | '/resident/announcements'
     | '/resident/charges'
+    | '/resident/notifications'
     | '/resident/payments'
+    | '/resident/polls'
+    | '/resident/profile'
     | '/resident/requests'
+    | '/resident/suggestions'
     | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/provider/'
     | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
@@ -372,7 +511,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
-    | '/provider'
     | '/admin/managers'
     | '/admin/notifications'
     | '/admin/reports'
@@ -393,12 +531,26 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/provider/calendar'
+    | '/provider/hours'
+    | '/provider/income'
+    | '/provider/notifications'
+    | '/provider/profile'
+    | '/provider/requests'
+    | '/provider/reviews'
+    | '/provider/settlements'
+    | '/resident/announcements'
     | '/resident/charges'
+    | '/resident/notifications'
     | '/resident/payments'
+    | '/resident/polls'
+    | '/resident/profile'
     | '/resident/requests'
+    | '/resident/suggestions'
     | '/resident/unit'
     | '/admin'
     | '/manager'
+    | '/provider'
     | '/resident'
     | '/admin/buildings/$id'
     | '/admin/buildings'
@@ -430,12 +582,26 @@ export interface FileRouteTypes {
     | '/manager/residents'
     | '/manager/settings'
     | '/manager/units'
+    | '/provider/calendar'
+    | '/provider/hours'
+    | '/provider/income'
+    | '/provider/notifications'
+    | '/provider/profile'
+    | '/provider/requests'
+    | '/provider/reviews'
+    | '/provider/settlements'
+    | '/resident/announcements'
     | '/resident/charges'
+    | '/resident/notifications'
     | '/resident/payments'
+    | '/resident/polls'
+    | '/resident/profile'
     | '/resident/requests'
+    | '/resident/suggestions'
     | '/resident/unit'
     | '/admin/'
     | '/manager/'
+    | '/provider/'
     | '/resident/'
     | '/admin/buildings/$id'
     | '/admin/buildings/'
@@ -446,7 +612,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRouteWithChildren
-  ProviderRoute: typeof ProviderRoute
+  ProviderRoute: typeof ProviderRouteWithChildren
   ResidentRoute: typeof ResidentRouteWithChildren
 }
 
@@ -648,11 +814,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerUnitsRouteImport
       parentRoute: typeof ManagerRoute
     }
+    '/provider/': {
+      id: '/provider/'
+      path: '/'
+      fullPath: '/provider/'
+      preLoaderRoute: typeof ProviderIndexRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/calendar': {
+      id: '/provider/calendar'
+      path: '/calendar'
+      fullPath: '/provider/calendar'
+      preLoaderRoute: typeof ProviderCalendarRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/hours': {
+      id: '/provider/hours'
+      path: '/hours'
+      fullPath: '/provider/hours'
+      preLoaderRoute: typeof ProviderHoursRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/income': {
+      id: '/provider/income'
+      path: '/income'
+      fullPath: '/provider/income'
+      preLoaderRoute: typeof ProviderIncomeRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/notifications': {
+      id: '/provider/notifications'
+      path: '/notifications'
+      fullPath: '/provider/notifications'
+      preLoaderRoute: typeof ProviderNotificationsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/profile': {
+      id: '/provider/profile'
+      path: '/profile'
+      fullPath: '/provider/profile'
+      preLoaderRoute: typeof ProviderProfileRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/requests': {
+      id: '/provider/requests'
+      path: '/requests'
+      fullPath: '/provider/requests'
+      preLoaderRoute: typeof ProviderRequestsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/reviews': {
+      id: '/provider/reviews'
+      path: '/reviews'
+      fullPath: '/provider/reviews'
+      preLoaderRoute: typeof ProviderReviewsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/settlements': {
+      id: '/provider/settlements'
+      path: '/settlements'
+      fullPath: '/provider/settlements'
+      preLoaderRoute: typeof ProviderSettlementsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
     '/resident/': {
       id: '/resident/'
       path: '/'
       fullPath: '/resident/'
       preLoaderRoute: typeof ResidentIndexRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/announcements': {
+      id: '/resident/announcements'
+      path: '/announcements'
+      fullPath: '/resident/announcements'
+      preLoaderRoute: typeof ResidentAnnouncementsRouteImport
       parentRoute: typeof ResidentRoute
     }
     '/resident/charges': {
@@ -662,6 +898,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResidentChargesRouteImport
       parentRoute: typeof ResidentRoute
     }
+    '/resident/notifications': {
+      id: '/resident/notifications'
+      path: '/notifications'
+      fullPath: '/resident/notifications'
+      preLoaderRoute: typeof ResidentNotificationsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
     '/resident/payments': {
       id: '/resident/payments'
       path: '/payments'
@@ -669,11 +912,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResidentPaymentsRouteImport
       parentRoute: typeof ResidentRoute
     }
+    '/resident/polls': {
+      id: '/resident/polls'
+      path: '/polls'
+      fullPath: '/resident/polls'
+      preLoaderRoute: typeof ResidentPollsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/profile': {
+      id: '/resident/profile'
+      path: '/profile'
+      fullPath: '/resident/profile'
+      preLoaderRoute: typeof ResidentProfileRouteImport
+      parentRoute: typeof ResidentRoute
+    }
     '/resident/requests': {
       id: '/resident/requests'
       path: '/requests'
       fullPath: '/resident/requests'
       preLoaderRoute: typeof ResidentRequestsRouteImport
+      parentRoute: typeof ResidentRoute
+    }
+    '/resident/suggestions': {
+      id: '/resident/suggestions'
+      path: '/suggestions'
+      fullPath: '/resident/suggestions'
+      preLoaderRoute: typeof ResidentSuggestionsRouteImport
       parentRoute: typeof ResidentRoute
     }
     '/resident/unit': {
@@ -765,18 +1029,56 @@ const ManagerRouteChildren: ManagerRouteChildren = {
 const ManagerRouteWithChildren =
   ManagerRoute._addFileChildren(ManagerRouteChildren)
 
+interface ProviderRouteChildren {
+  ProviderCalendarRoute: typeof ProviderCalendarRoute
+  ProviderHoursRoute: typeof ProviderHoursRoute
+  ProviderIncomeRoute: typeof ProviderIncomeRoute
+  ProviderNotificationsRoute: typeof ProviderNotificationsRoute
+  ProviderProfileRoute: typeof ProviderProfileRoute
+  ProviderRequestsRoute: typeof ProviderRequestsRoute
+  ProviderReviewsRoute: typeof ProviderReviewsRoute
+  ProviderSettlementsRoute: typeof ProviderSettlementsRoute
+  ProviderIndexRoute: typeof ProviderIndexRoute
+}
+
+const ProviderRouteChildren: ProviderRouteChildren = {
+  ProviderCalendarRoute: ProviderCalendarRoute,
+  ProviderHoursRoute: ProviderHoursRoute,
+  ProviderIncomeRoute: ProviderIncomeRoute,
+  ProviderNotificationsRoute: ProviderNotificationsRoute,
+  ProviderProfileRoute: ProviderProfileRoute,
+  ProviderRequestsRoute: ProviderRequestsRoute,
+  ProviderReviewsRoute: ProviderReviewsRoute,
+  ProviderSettlementsRoute: ProviderSettlementsRoute,
+  ProviderIndexRoute: ProviderIndexRoute,
+}
+
+const ProviderRouteWithChildren = ProviderRoute._addFileChildren(
+  ProviderRouteChildren,
+)
+
 interface ResidentRouteChildren {
+  ResidentAnnouncementsRoute: typeof ResidentAnnouncementsRoute
   ResidentChargesRoute: typeof ResidentChargesRoute
+  ResidentNotificationsRoute: typeof ResidentNotificationsRoute
   ResidentPaymentsRoute: typeof ResidentPaymentsRoute
+  ResidentPollsRoute: typeof ResidentPollsRoute
+  ResidentProfileRoute: typeof ResidentProfileRoute
   ResidentRequestsRoute: typeof ResidentRequestsRoute
+  ResidentSuggestionsRoute: typeof ResidentSuggestionsRoute
   ResidentUnitRoute: typeof ResidentUnitRoute
   ResidentIndexRoute: typeof ResidentIndexRoute
 }
 
 const ResidentRouteChildren: ResidentRouteChildren = {
+  ResidentAnnouncementsRoute: ResidentAnnouncementsRoute,
   ResidentChargesRoute: ResidentChargesRoute,
+  ResidentNotificationsRoute: ResidentNotificationsRoute,
   ResidentPaymentsRoute: ResidentPaymentsRoute,
+  ResidentPollsRoute: ResidentPollsRoute,
+  ResidentProfileRoute: ResidentProfileRoute,
   ResidentRequestsRoute: ResidentRequestsRoute,
+  ResidentSuggestionsRoute: ResidentSuggestionsRoute,
   ResidentUnitRoute: ResidentUnitRoute,
   ResidentIndexRoute: ResidentIndexRoute,
 }
@@ -790,7 +1092,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRouteWithChildren,
-  ProviderRoute: ProviderRoute,
+  ProviderRoute: ProviderRouteWithChildren,
   ResidentRoute: ResidentRouteWithChildren,
 }
 export const routeTree = rootRouteImport

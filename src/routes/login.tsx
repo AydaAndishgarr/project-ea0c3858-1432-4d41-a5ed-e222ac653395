@@ -9,9 +9,9 @@ import type { Role } from "@/data/types";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "ورود نمایشی | سامانه مدیریت ساختمان" },
-      { name: "description", content: "یکی از نقش‌های نمایشی سامانه مدیریت ساختمان را انتخاب کنید." },
-      { property: "og:title", content: "ورود نمایشی به سامانه مدیریت ساختمان" },
+      { title: "ورود نمایشی | خانه یار" },
+      { name: "description", content: "یکی از نقش‌های نمایشی خانه یار را انتخاب کنید." },
+      { property: "og:title", content: "ورود نمایشی به خانه یار" },
       { property: "og:description", content: "ورود بدون رمز عبور با انتخاب نقش نمایشی." },
     ],
   }),
@@ -79,7 +79,7 @@ function LoginPage() {
           <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary text-primary-foreground">
             <Building2 className="size-7" />
           </span>
-          <h1 className="mt-4 text-2xl font-bold sm:text-3xl">ورود به نسخه نمایشی</h1>
+          <h1 className="mt-4 text-2xl font-bold sm:text-3xl">ورود به نسخه نمایشی خانه یار</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             نقش موردنظر خود را انتخاب کنید. نیازی به نام کاربری و رمز عبور نیست.
           </p>

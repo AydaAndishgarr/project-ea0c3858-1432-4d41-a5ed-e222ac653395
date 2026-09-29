@@ -67,7 +67,7 @@ const initialState: AppState = {
   workSlots: seed.workSlots,
 };
 
-const STORAGE_KEY = "bms-state-v1";
+const STORAGE_KEY = "khanehyar-demo-v2";
 
 interface Store {
   state: AppState;
@@ -146,7 +146,12 @@ export function useActions() {
 
       /* payments */
       payCharge: (charge: Charge) => {
-        update("charges", state.charges.map((c) => (c.id === charge.id ? { ...c, status: "پرداخت شده" } : c)));
+        const nextCharges = state.charges.map((c) => (c.id === charge.id ? { ...c, status: "پرداخت شده" as const } : c));
+        const nextResidents = state.residents.map((r) =>
+          r.name === charge.residentName ? { ...r, debt: Math.max(0, r.debt - charge.amount) } : r,
+        );
+        const residentDebt = nextResidents.find((r) => r.name === charge.residentName)?.debt ?? 0;
+        update("charges", nextCharges);
         update("payments", [
           {
             id: uid("p"),
@@ -161,10 +166,13 @@ export function useActions() {
           },
           ...state.payments,
         ]);
+        update("residents", nextResidents);
         update(
-          "residents",
-          state.residents.map((r) =>
-            r.name === charge.residentName ? { ...r, debt: Math.max(0, r.debt - charge.amount) } : r,
+          "units",
+          state.units.map((u) =>
+            u.number === charge.unitNumber
+              ? { ...u, paymentStatus: residentDebt > 0 ? "بدهکار" : "تسویه" }
+              : u,
           ),
         );
       },
@@ -187,12 +195,22 @@ export function useActions() {
 
       /* requests */
       addRequest: (r: Omit<ServiceRequest, "id">) => update("requests", [{ ...r, id: uid("sr") }, ...state.requests]),
-      setRequestStatus: (id: string, status: ServiceRequest["status"], label: string) =>
+      setRequestStatus: (
+        id: string,
+        status: ServiceRequest["status"],
+        label: string,
+        patch?: Partial<ServiceRequest>,
+      ) =>
         update(
           "requests",
           state.requests.map((r) =>
             r.id === id
-              ? { ...r, status, timeline: [...r.timeline, { at: "۱۴۰۴/۰۶/۱۶", label }] }
+              ? {
+                  ...r,
+                  ...patch,
+                  status,
+                  timeline: [...r.timeline, { at: "۱۴۰۴/۰۶/۱۶", label }],
+                }
               : r,
           ),
         ),

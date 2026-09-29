@@ -79,9 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "سامانه مدیریت ساختمان" },
-      { name: "description", content: "سامانه یکپارچه مدیریت ساختمان، شارژ، پرداخت و خدمات." },
+      { title: "خانه یار | مدیریت هوشمند ساختمان" },
+      {
+        name: "description",
+        content:
+          "خانه یار — پلتفرم مدرن مدیریت ساختمان برای شارژ، پرداخت، هزینه‌ها، تعمیرات، اطلاعیه‌ها و گزارش‌های مالی.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: "خانه یار | مدیریت هوشمند ساختمان" },
+      {
+        property: "og:description",
+        content: "مدیریت هوشمند ساختمان، واحدها، ساکنان و امور مالی در یک سامانه فارسی.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -91,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,

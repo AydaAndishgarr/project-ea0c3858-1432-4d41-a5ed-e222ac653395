@@ -21,16 +21,16 @@ import { faDigits } from "@/lib/format";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "سامانه مدیریت ساختمان | مدیریت شارژ، پرداخت و خدمات ساختمان" },
+      { title: "خانه یار | مدیریت هوشمند ساختمان" },
       {
         name: "description",
         content:
-          "سامانه ابری مدیریت ساختمان برای مدیریت ساکنان، واحدها، شارژ، پرداخت‌ها، هزینه‌ها، تعمیرات و گزارش‌های مالی.",
+          "خانه یار پلتفرم ابری مدیریت ساختمان برای مدیریت ساکنان، واحدها، شارژ، پرداخت‌ها، هزینه‌ها، تعمیرات و گزارش‌های مالی است.",
       },
-      { property: "og:title", content: "سامانه مدیریت ساختمان" },
+      { property: "og:title", content: "خانه یار | مدیریت هوشمند ساختمان" },
       {
         property: "og:description",
-        content: "مدیریت ساکنان، شارژ، پرداخت‌ها، هزینه‌ها و درخواست‌های خدمات در یک سامانه ساده.",
+        content: "مدیریت ساکنان، شارژ، پرداخت‌ها، هزینه‌ها و درخواست‌های خدمات در یک سامانه ساده و فارسی.",
       },
     ],
   }),
@@ -90,7 +90,7 @@ function Landing() {
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
               <Building2 className="size-5" />
             </span>
-            <span className="truncate text-base font-bold">سامانه مدیریت ساختمان</span>
+            <span className="truncate text-base font-bold">خانه یار</span>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <nav className="hidden items-center gap-1 md:flex">
@@ -137,11 +137,12 @@ function Landing() {
               نسخه نمایشی — بدون نیاز به ثبت‌نام
             </span>
             <h1 className="mt-4 text-3xl leading-relaxed font-black text-foreground sm:text-4xl lg:text-5xl lg:leading-[1.3]">
-              مدیریت ساختمان، ساده و شفاف
+              خانه یار؛ مدیریت هوشمند ساختمان
             </h1>
             <p className="mt-4 text-base leading-8 text-muted-foreground">
-              همه امور ساختمان از ساکنان و واحدها تا شارژ، پرداخت، هزینه‌ها، تعمیرات، ارائه‌دهندگان
-              خدمات، اطلاعیه‌ها و گزارش‌های مالی را در یک سامانه یکپارچه مدیریت کنید.
+              پلتفرم مدرن مدیریت ساختمان برای مجتمع‌های مسکونی، اداری و تجاری — از ساکنان و واحدها تا
+              شارژ، پرداخت، هزینه‌ها، تعمیرات، ارائه‌دهندگان خدمات، اطلاعیه‌ها و گزارش‌های مالی، همه در
+              یک سامانه یکپارچه فارسی.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -284,10 +285,10 @@ function Landing() {
           <div>
             <div className="flex items-center gap-2">
               <Building2 className="size-5 text-primary" />
-              <span className="font-bold">سامانه مدیریت ساختمان</span>
+              <span className="font-bold">خانه یار</span>
             </div>
             <p className="mt-3 text-sm leading-7 text-muted-foreground">
-              نرم‌افزار ابری مدیریت ساختمان برای مجتمع‌های مسکونی، اداری و تجاری.
+              پلتفرم ابری مدیریت هوشمند ساختمان برای مجتمع‌های مسکونی، اداری و تجاری.
             </p>
           </div>
           <div>
@@ -310,14 +311,14 @@ function Landing() {
           <div>
             <p className="font-semibold">ارتباط با ما</p>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>تهران، خیابان ولیعصر، برج نگین</li>
+              <li>تهران، خیابان ولیعصر</li>
               <li>۰۲۱-۹۱۰۰۲۲۳۳</li>
-              <li>info@bms-demo.ir</li>
+              <li>info@khaneyar.ir</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-          © ۱۴۰۴ سامانه مدیریت ساختمان — نسخه نمایشی با داده‌های آزمایشی
+          © ۱۴۰۴ خانه یار — نسخه نمایشی با داده‌های آزمایشی
         </div>
       </footer>
     </div>

@@ -54,7 +54,7 @@ function Brand({ role }: { role: Role }) {
         <Building2 className="size-5" />
       </span>
       <div className="min-w-0">
-        <p className="truncate text-sm font-bold text-sidebar-foreground">{roleMeta[role].title}</p>
+        <p className="truncate text-sm font-bold text-sidebar-foreground">خانه یار</p>
         <p className="truncate text-xs text-sidebar-foreground/70">{roleMeta[role].subtitle}</p>
       </div>
     </div>
@@ -76,7 +76,7 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
         ? "/manager/notifications"
         : role === "resident"
           ? "/resident/notifications"
-          : "/provider";
+          : "/provider/notifications";
 
   const exit = () => {
     setRole(null);
