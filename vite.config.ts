@@ -17,4 +17,8 @@ export default defineConfig({
   },
   // Skip Nitro so `vite build` produces a static client bundle under dist/ (no worker runtime needed).
   nitro: false,
+  vite: {
+    server: { port: 8080 },
+    preview: { port: 8080 },
+  },
 });

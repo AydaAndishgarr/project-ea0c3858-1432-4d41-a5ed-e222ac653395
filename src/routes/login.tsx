@@ -1,18 +1,24 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Building2, Home, ShieldCheck, Wrench } from "lucide-react";
+import { ArrowLeft, Building2, Home, Loader2, ShieldCheck, Wrench } from "lucide-react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { loginRequest, meRequest } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
+import { ROLE_HOME } from "@/lib/auth-paths";
 import { useApp } from "@/store/app-store";
 import type { Role } from "@/data/types";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "ورود نمایشی | خانه یار" },
-      { name: "description", content: "یکی از نقش‌های نمایشی خانه یار را انتخاب کنید." },
-      { property: "og:title", content: "ورود نمایشی به خانه یار" },
-      { property: "og:description", content: "ورود بدون رمز عبور با انتخاب نقش نمایشی." },
+      { title: "ورود | خانه یار" },
+      { name: "description", content: "با ایمیل و رمز عبور وارد خانه یار شوید." },
+      { property: "og:title", content: "ورود به خانه یار" },
+      { property: "og:description", content: "ورود با حساب کاربری و نقش واقعی سامانه." },
     ],
   }),
   component: LoginPage,
@@ -23,46 +29,74 @@ const options: {
   label: string;
   desc: string;
   icon: typeof Home;
-  to: "/admin" | "/manager" | "/resident" | "/provider";
 }[] = [
   {
     role: "admin",
-    label: "ورود به عنوان مدیر کل",
+    label: "مدیر کل",
     desc: "نظارت بر همه ساختمان‌ها، مدیران، کاربران و اشتراک‌ها",
     icon: ShieldCheck,
-    to: "/admin",
   },
   {
     role: "manager",
-    label: "ورود به عنوان مدیر ساختمان",
+    label: "مدیر ساختمان",
     desc: "مدیریت واحدها، ساکنان، شارژ، هزینه‌ها و درخواست‌ها",
     icon: Building2,
-    to: "/manager",
   },
   {
     role: "resident",
-    label: "ورود به عنوان ساکن",
+    label: "ساکن",
     desc: "مشاهده بدهی، پرداخت شارژ و ثبت درخواست خدمات",
     icon: Home,
-    to: "/resident",
   },
   {
     role: "provider",
-    label: "ورود به عنوان ارائه‌دهنده خدمات",
+    label: "ارائه‌دهنده خدمات",
     desc: "مدیریت درخواست‌ها، تقویم کاری، درآمد و تسویه",
     icon: Wrench,
-    to: "/provider",
   },
 ];
 
-function LoginPage() {
-  const { setRole } = useApp();
-  const navigate = useNavigate();
+type LoginStatus = "idle" | "loading" | "success" | "error";
 
-  const enter = (opt: (typeof options)[number]) => {
-    setRole(opt.role);
-    toast.success(`${opt.label} انجام شد.`);
-    navigate({ to: opt.to });
+function loginMessage(error: unknown) {
+  if (error instanceof ApiError) {
+    if (error.code === "unauthorized") return "ایمیل یا رمز عبور اشتباه است.";
+    if (error.code === "validation") return "لطفاً ایمیل و رمز عبور معتبر وارد کنید.";
+    if (error.code === "network") return "ارتباط با سرور برقرار نشد. دوباره تلاش کنید.";
+  }
+  return "خطایی رخ داد. لطفاً بعداً تلاش کنید.";
+}
+
+function LoginPage() {
+  const { authReady, authUser, setAuthUser } = useApp();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<LoginStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (!authReady || !authUser) return;
+    navigate({ to: ROLE_HOME[authUser.role] });
+  }, [authReady, authUser, navigate]);
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (status === "loading") return;
+    setStatus("loading");
+    setErrorMessage("");
+    try {
+      await loginRequest(email.trim(), password);
+      const me = await meRequest();
+      setAuthUser(me);
+      setStatus("success");
+      toast.success("ورود با موفقیت انجام شد.");
+      navigate({ to: ROLE_HOME[me.role] });
+    } catch (error) {
+      const message = loginMessage(error);
+      setErrorMessage(message);
+      setStatus("error");
+    }
   };
 
   return (
@@ -79,33 +113,67 @@ function LoginPage() {
           <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary text-primary-foreground">
             <Building2 className="size-7" />
           </span>
-          <h1 className="mt-4 text-2xl font-bold sm:text-3xl">ورود به نسخه نمایشی خانه یار</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            نقش موردنظر خود را انتخاب کنید. نیازی به نام کاربری و رمز عبور نیست.
-          </p>
+          <h1 className="mt-4 text-2xl font-bold sm:text-3xl">ورود به خانه یار</h1>
+          <p className="mt-2 text-sm text-muted-foreground">ایمیل و رمز عبور حساب خود را وارد کنید.</p>
         </div>
+
+        <Card className="mx-auto mt-8 max-w-md gap-4 p-5">
+          <form className="grid gap-4" onSubmit={submit}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">ایمیل</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="username"
+                dir="ltr"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+                disabled={status === "loading"}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">رمز عبور</Label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                dir="ltr"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                minLength={8}
+                disabled={status === "loading"}
+              />
+            </div>
+            {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+            <Button type="submit" className="w-full" disabled={status === "loading"}>
+              {status === "loading" ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  در حال ورود...
+                </>
+              ) : (
+                "ورود"
+              )}
+            </Button>
+          </form>
+        </Card>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {options.map((opt) => (
-            <Card
-              key={opt.role}
-              className="cursor-pointer gap-3 p-5 transition-all hover:border-primary/50 hover:shadow-md"
-              onClick={() => enter(opt)}
-            >
+            <Card key={opt.role} className="gap-3 p-5">
               <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
                 <opt.icon className="size-5" />
               </span>
               <p className="font-semibold">{opt.label}</p>
               <p className="text-sm leading-7 text-muted-foreground">{opt.desc}</p>
-              <Button className="mt-1 w-full" onClick={() => enter(opt)}>
-                ورود
-              </Button>
             </Card>
           ))}
         </div>
 
         <p className="mt-8 text-center text-xs text-muted-foreground">
-          تمام داده‌های این سامانه آزمایشی است و فقط در مرورگر شما ذخیره می‌شود.
+          نقش شما پس از ورود از حساب واقعی سامانه خوانده می‌شود.
         </p>
       </main>
     </div>

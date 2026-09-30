@@ -15,16 +15,20 @@
 
 > این پروژه برای ارائه دانشگاهی به‌صورت **Demo Mode** طراحی شده است. UI کامل و تعاملی است، اما اتصال production به پرداخت واقعی، SMS یا اعلان پوش پیاده‌سازی نشده است.
 
-## حالت نمایشی (پیش‌فرض)
+## احراز هویت واقعی + داده نمایشی
 
-با `VITE_DEMO_MODE=true` (یا خالی گذاشتن متغیر) اپلیکیشن با داده‌های محلی فارسی کار می‌کند و در `localStorage` ذخیره می‌شود.
+ورود از مسیر `/login` با **ایمیل و رمز عبور** به API واقعی (`POST /api/v1/auth/login`) وصل می‌شود. نقش از کاربر دیتابیس می‌آید، نه از انتخاب در فرانت‌اند.
 
-ورود بدون رمز از مسیر `/login` با چهار نقش:
+با `VITE_DEMO_MODE=true` بقیهٔ داشبورد همچنان از دادهٔ محلی فارسی استفاده می‌کند. JWT داخل Cookie از نوع HttpOnly ذخیره می‌شود.
 
-- مدیر کل
-- مدیر ساختمان
-- ساکن
-- ارائه‌دهنده خدمات
+حساب‌های دمو (رمز برای همه: `Demo@12345`):
+
+- `admin@example.com` → `/admin`
+- `manager@example.com` → `/manager`
+- `resident@example.com` → `/resident`
+- `provider@example.com` → `/provider`
+
+جزئیات بک‌اند: [`backend/README.md`](backend/README.md)
 
 ## توسعه فرانت‌اند
 
@@ -51,11 +55,11 @@ npm run preview
 
 ```env
 VITE_DEMO_MODE=true
-VITE_API_BASE_URL=
+VITE_API_BASE_URL=http://localhost:3001/api/v1
 ```
 
-- `VITE_DEMO_MODE` — پیش‌فرض امن برای ارائه (true)
-- `VITE_API_BASE_URL` — آدرس اختیاری API مثل `http://localhost:3001/api/v1`؛ برای دمو خالی بگذارید
+- `VITE_DEMO_MODE` — دادهٔ کسب‌وکار نمایشی را نگه می‌دارد (true)
+- `VITE_API_BASE_URL` — آدرس NestJS مثل `http://localhost:3001/api/v1` (ورود واقعی به این آدرس نیاز دارد)
 
 هیچ رازی در متغیرهای فرانت‌اند قرار ندهید.
 
@@ -67,24 +71,26 @@ VITE_API_BASE_URL=
 | Build Command | `npm run build` |
 | Output Directory | `dist/client` |
 | Framework Preset | Other |
-| Env | `VITE_DEMO_MODE=true` و در صورت نیاز `VITE_API_BASE_URL` |
+| Env | `VITE_DEMO_MODE=true` و `VITE_API_BASE_URL` به API جداگانه |
 
 `vercel.json` برای SPA rewrite آماده است تا رفرش روی مسیرهای تو در تو کار کند.
 
-## Backend (اختیاری)
+## Backend
 
-پوشه `backend/` شامل NestJS + Prisma است و بخشی از معماری پروژه باقی مانده است. برای دمو فردا **لازم نیست** اجرا شود.
+ورود واقعی به PostgreSQL و NestJS نیاز دارد. راهنمای اجرا و متغیرهای production در [`backend/README.md`](backend/README.md) است.
 
 ```sh
 cd backend
 cp .env.example .env
+docker compose up -d
 npm install
 npx prisma generate
-# نیاز به PostgreSQL دارد
+npx prisma migrate deploy
+npm run prisma:seed
 npm run start:dev
 ```
 
-Health (در صورت اجرا): `GET /api/v1/health` → `{ "status": "ok", ... }`
+Health: `GET /api/v1/health` → `{ "status": "ok", ... }`
 
 ## ساختار مهم فرانت‌اند
 
@@ -97,5 +103,5 @@ Health (در صورت اجرا): `GET /api/v1/health` → `{ "status": "ok", ...
 ## نکات ارائه
 
 1. صفحه اصلی برند **خانه یار** را نشان می‌دهد.
-2. از «ورود به نسخه نمایشی» نقش را عوض کنید.
+2. از `/login` با یکی از حساب‌های دمو وارد شوید.
 3. جریان‌های پیشنهادی: پرداخت شارژ ساکن، ایجاد شارژ مدیر، قبول درخواست ارائه‌دهنده، رأی‌گیری، اعلان‌ها.

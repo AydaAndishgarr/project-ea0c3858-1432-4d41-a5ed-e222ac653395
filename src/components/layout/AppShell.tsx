@@ -62,9 +62,10 @@ function Brand({ role }: { role: Role }) {
 }
 
 export function AppShell({ role, children }: { role: Role; children: ReactNode }) {
-  const { state, setRole } = useApp();
+  const { state, authUser, logout } = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const unread = state.notifications.filter(
     (n) => !n.read && (n.audience === "all" || n.audience === role),
   ).length;
@@ -78,8 +79,10 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
           ? "/resident/notifications"
           : "/provider/notifications";
 
-  const exit = () => {
-    setRole(null);
+  const exit = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    await logout();
     navigate({ to: "/login" });
   };
 
@@ -93,10 +96,11 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
         <Button
           variant="ghost"
           onClick={exit}
+          disabled={loggingOut}
           className="mt-4 justify-start gap-2 text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
           <LogOut className="size-4" />
-          خروج و تغییر نقش
+          خروج
         </Button>
       </aside>
 
@@ -121,25 +125,30 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
                   <Button
                     variant="ghost"
                     onClick={exit}
+                    disabled={loggingOut}
                     className="justify-start gap-2 text-sidebar-foreground/80 hover:bg-sidebar-accent"
                   >
                     <LogOut className="size-4" />
-                    خروج و تغییر نقش
+                    خروج
                   </Button>
                 </SheetContent>
               </Sheet>
             </div>
 
             <p className="min-w-0 truncate text-sm font-medium text-foreground">
-              {roleMeta[role].user}
+              {authUser?.fullName ?? roleMeta[role].user}
             </p>
 
             <div className="flex shrink-0 items-center gap-2">
-              <Button variant="outline" size="sm" asChild className="hidden sm:inline-flex">
-                <Link to="/login">
-                  <Repeat className="size-4" />
-                  تغییر نقش
-                </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:inline-flex"
+                onClick={exit}
+                disabled={loggingOut}
+              >
+                <Repeat className="size-4" />
+                خروج
               </Button>
               <Button variant="outline" size="icon" asChild aria-label="اعلان‌ها" className="relative">
                 <Link to={notifPath}>

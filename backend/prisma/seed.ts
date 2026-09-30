@@ -14,65 +14,83 @@ import {
 
 const prisma = new PrismaClient();
 
-function requiredEnv(name: string): string {
+function envOr(name: string, fallback: string): string {
   const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required seed environment variable: ${name}`);
-  }
-  return value;
+  return value && value.trim().length > 0 ? value : fallback;
 }
 
 async function main() {
-  const password = requiredEnv('SEED_DEMO_PASSWORD');
+  const password = envOr('SEED_DEMO_PASSWORD', 'Demo@12345');
   const passwordHash = await hash(password, 10);
 
+  const adminEmail = envOr('SEED_ADMIN_EMAIL', 'admin@example.com');
+  const managerEmail = envOr('SEED_MANAGER_EMAIL', 'manager@example.com');
+  const residentEmail = envOr('SEED_RESIDENT_EMAIL', 'resident@example.com');
+  const providerEmail = envOr('SEED_PROVIDER_EMAIL', 'provider@example.com');
+
   const admin = await prisma.user.upsert({
-    where: { email: requiredEnv('SEED_ADMIN_EMAIL') },
+    where: { email: adminEmail },
     update: { passwordHash, role: Role.ADMIN, status: UserStatus.ACTIVE },
     create: {
-      email: requiredEnv('SEED_ADMIN_EMAIL'),
-      phone: requiredEnv('SEED_ADMIN_PHONE'),
-      fullName: requiredEnv('SEED_ADMIN_NAME'),
+      email: adminEmail,
+      phone: envOr('SEED_ADMIN_PHONE', '09120000000'),
+      fullName: envOr('SEED_ADMIN_NAME', 'Demo Admin'),
       passwordHash,
       role: Role.ADMIN,
     },
   });
 
   const manager = await prisma.user.upsert({
-    where: { email: requiredEnv('SEED_MANAGER_EMAIL') },
+    where: { email: managerEmail },
     update: { passwordHash, role: Role.MANAGER, status: UserStatus.ACTIVE },
     create: {
-      email: requiredEnv('SEED_MANAGER_EMAIL'),
-      phone: requiredEnv('SEED_MANAGER_PHONE'),
-      fullName: requiredEnv('SEED_MANAGER_NAME'),
+      email: managerEmail,
+      phone: envOr('SEED_MANAGER_PHONE', '09123456789'),
+      fullName: envOr('SEED_MANAGER_NAME', 'Demo Manager'),
       passwordHash,
       role: Role.MANAGER,
     },
   });
 
   const resident = await prisma.user.upsert({
-    where: { email: requiredEnv('SEED_RESIDENT_EMAIL') },
+    where: { email: residentEmail },
     update: { passwordHash, role: Role.RESIDENT, status: UserStatus.ACTIVE },
     create: {
-      email: requiredEnv('SEED_RESIDENT_EMAIL'),
-      phone: requiredEnv('SEED_RESIDENT_PHONE'),
-      fullName: requiredEnv('SEED_RESIDENT_NAME'),
+      email: residentEmail,
+      phone: envOr('SEED_RESIDENT_PHONE', '09121122334'),
+      fullName: envOr('SEED_RESIDENT_NAME', 'Demo Resident'),
       passwordHash,
       role: Role.RESIDENT,
     },
   });
 
   const providerUser = await prisma.user.upsert({
-    where: { email: requiredEnv('SEED_PROVIDER_EMAIL') },
+    where: { email: providerEmail },
     update: { passwordHash, role: Role.PROVIDER, status: UserStatus.ACTIVE },
     create: {
-      email: requiredEnv('SEED_PROVIDER_EMAIL'),
-      phone: requiredEnv('SEED_PROVIDER_PHONE'),
-      fullName: requiredEnv('SEED_PROVIDER_NAME'),
+      email: providerEmail,
+      phone: envOr('SEED_PROVIDER_PHONE', '02188997766'),
+      fullName: envOr('SEED_PROVIDER_NAME', 'Demo Provider'),
       passwordHash,
       role: Role.PROVIDER,
     },
   });
+
+  const usedEmails = new Set([adminEmail, managerEmail, residentEmail, providerEmail]);
+  const canonicalAccounts: Array<{ email: string; phone: string; fullName: string; role: Role }> = [
+    { email: 'admin@example.com', phone: '09120001000', fullName: 'Demo Admin', role: Role.ADMIN },
+    { email: 'manager@example.com', phone: '09120001001', fullName: 'Demo Manager', role: Role.MANAGER },
+    { email: 'resident@example.com', phone: '09120001002', fullName: 'Demo Resident', role: Role.RESIDENT },
+    { email: 'provider@example.com', phone: '09120001003', fullName: 'Demo Provider', role: Role.PROVIDER },
+  ];
+  for (const account of canonicalAccounts) {
+    if (usedEmails.has(account.email)) continue;
+    await prisma.user.upsert({
+      where: { email: account.email },
+      update: { passwordHash, role: account.role, status: UserStatus.ACTIVE },
+      create: { ...account, passwordHash },
+    });
+  }
 
   const building = await prisma.building.upsert({
     where: { id: '11111111-1111-4111-8111-111111111111' },
@@ -206,7 +224,7 @@ async function main() {
     },
   });
 
-  console.log('Seed completed. Demo users (password from SEED_DEMO_PASSWORD):');
+  console.log('Seed completed. Demo users (password from SEED_DEMO_PASSWORD or Demo@12345):');
   console.log(`  admin     ${admin.email}`);
   console.log(`  manager   ${manager.email}`);
   console.log(`  resident  ${resident.email}`);

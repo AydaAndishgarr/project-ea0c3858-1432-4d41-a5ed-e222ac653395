@@ -11,10 +11,15 @@ async function bootstrap() {
   const origin = config.get<string>('frontendOrigin') ?? 'http://localhost:8080';
   const port = config.get<number>('port') ?? 3001;
 
+  const origins = origin
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
   app.setGlobalPrefix(prefix);
   app.use(cookieParser());
   app.enableCors({
-    origin,
+    origin: origins.length <= 1 ? origins[0] : origins,
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { logoutRequest, meRequest, type AuthUser } from "@/lib/api/auth";
 import * as seed from "@/data/mock";
 import type {
   Announcement,
@@ -72,7 +73,11 @@ const STORAGE_KEY = "khanehyar-demo-v2";
 interface Store {
   state: AppState;
   hydrated: boolean;
+  authReady: boolean;
+  authUser: AuthUser | null;
   setRole: (role: Role | null) => void;
+  setAuthUser: (user: AuthUser | null) => void;
+  logout: () => Promise<void>;
   update: <K extends keyof AppState>(key: K, value: AppState[K]) => void;
   reset: () => void;
 }
@@ -82,21 +87,48 @@ const AppStoreContext = createContext<Store | null>(null);
 export function AppStoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(initialState);
   const [hydrated, setHydrated] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+  const [authUser, setAuthUserState] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setState({ ...initialState, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = JSON.parse(raw) as Partial<AppState>;
+        const { role: _ignored, ...rest } = parsed;
+        setState({ ...initialState, ...rest, role: null });
+      }
     } catch {
       /* ignore corrupted local data */
     }
     setHydrated(true);
+
+    let cancelled = false;
+    void (async () => {
+      try {
+        const user = await meRequest();
+        if (cancelled) return;
+        setAuthUserState(user);
+        setState((prev) => ({ ...prev, role: user.role }));
+      } catch {
+        if (cancelled) return;
+        setAuthUserState(null);
+        setState((prev) => ({ ...prev, role: null }));
+      } finally {
+        if (!cancelled) setAuthReady(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
     if (!hydrated) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const { role: _role, ...rest } = state;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...rest, role: null }));
     } catch {
       /* storage unavailable */
     }
@@ -110,11 +142,26 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, role }));
   }, []);
 
+  const setAuthUser = useCallback((user: AuthUser | null) => {
+    setAuthUserState(user);
+    setState((prev) => ({ ...prev, role: user?.role ?? null }));
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await logoutRequest();
+    } catch {
+      /* still clear local session */
+    }
+    setAuthUserState(null);
+    setState((prev) => ({ ...prev, role: null }));
+  }, []);
+
   const reset = useCallback(() => setState(initialState), []);
 
   const value = useMemo(
-    () => ({ state, hydrated, setRole, update, reset }),
-    [state, hydrated, setRole, update, reset],
+    () => ({ state, hydrated, authReady, authUser, setRole, setAuthUser, logout, update, reset }),
+    [state, hydrated, authReady, authUser, setRole, setAuthUser, logout, update, reset],
   );
 
   return <AppStoreContext.Provider value={value}>{children}</AppStoreContext.Provider>;
