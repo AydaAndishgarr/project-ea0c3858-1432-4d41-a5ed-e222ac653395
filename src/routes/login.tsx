@@ -6,9 +6,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { loginRequest, meRequest } from "@/lib/api/auth";
+import { loginRequest, logoutRequest, meRequest } from "@/lib/api/auth";
 import { ApiError } from "@/lib/api/client";
 import { ROLE_HOME } from "@/lib/auth-paths";
+import { cn } from "@/lib/utils";
 import { useApp } from "@/store/app-store";
 import type { Role } from "@/data/types";
 
@@ -56,6 +57,8 @@ const options: {
   },
 ];
 
+const ROLE_MISMATCH_MESSAGE = "این حساب متعلق به نقش انتخاب‌شده نیست.";
+
 type LoginStatus = "idle" | "loading" | "success" | "error";
 
 function loginMessage(error: unknown) {
@@ -70,24 +73,36 @@ function loginMessage(error: unknown) {
 function LoginPage() {
   const { authReady, authUser, setAuthUser } = useApp();
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<LoginStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (!authReady || !authUser) return;
+    if (!authReady || !authUser || selectedRole) return;
     navigate({ to: ROLE_HOME[authUser.role] });
-  }, [authReady, authUser, navigate]);
+  }, [authReady, authUser, selectedRole, navigate]);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (status === "loading") return;
+    if (!selectedRole || status === "loading") return;
     setStatus("loading");
     setErrorMessage("");
     try {
       await loginRequest(email.trim(), password);
       const me = await meRequest();
+      if (me.role !== selectedRole) {
+        try {
+          await logoutRequest();
+        } catch {
+          /* cookie may still be cleared on next visit */
+        }
+        setAuthUser(null);
+        setErrorMessage(ROLE_MISMATCH_MESSAGE);
+        setStatus("error");
+        return;
+      }
       setAuthUser(me);
       setStatus("success");
       toast.success("ورود با موفقیت انجام شد.");
@@ -97,6 +112,12 @@ function LoginPage() {
       setErrorMessage(message);
       setStatus("error");
     }
+  };
+
+  const chooseRole = (role: Role) => {
+    setSelectedRole(role);
+    setErrorMessage("");
+    setStatus("idle");
   };
 
   return (
@@ -114,67 +135,82 @@ function LoginPage() {
             <Building2 className="size-7" />
           </span>
           <h1 className="mt-4 text-2xl font-bold sm:text-3xl">ورود به خانه یار</h1>
-          <p className="mt-2 text-sm text-muted-foreground">ایمیل و رمز عبور حساب خود را وارد کنید.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            ابتدا نقش خود را انتخاب کنید، سپس با ایمیل و رمز عبور وارد شوید.
+          </p>
         </div>
-
-        <Card className="mx-auto mt-8 max-w-md gap-4 p-5">
-          <form className="grid gap-4" onSubmit={submit}>
-            <div className="grid gap-2">
-              <Label htmlFor="email">ایمیل</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="username"
-                dir="ltr"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                required
-                disabled={status === "loading"}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">رمز عبور</Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                dir="ltr"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-                minLength={8}
-                disabled={status === "loading"}
-              />
-            </div>
-            {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-            <Button type="submit" className="w-full" disabled={status === "loading"}>
-              {status === "loading" ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  در حال ورود...
-                </>
-              ) : (
-                "ورود"
-              )}
-            </Button>
-          </form>
-        </Card>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {options.map((opt) => (
-            <Card key={opt.role} className="gap-3 p-5">
-              <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
-                <opt.icon className="size-5" />
-              </span>
-              <p className="font-semibold">{opt.label}</p>
-              <p className="text-sm leading-7 text-muted-foreground">{opt.desc}</p>
-            </Card>
+            <button
+              key={opt.role}
+              type="button"
+              onClick={() => chooseRole(opt.role)}
+              className="text-right"
+            >
+              <Card
+                className={cn(
+                  "h-full gap-3 p-5 transition-colors",
+                  selectedRole === opt.role ? "border-primary ring-2 ring-primary/30" : "hover:border-primary/40",
+                )}
+              >
+                <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <opt.icon className="size-5" />
+                </span>
+                <p className="font-semibold">{opt.label}</p>
+                <p className="text-sm leading-7 text-muted-foreground">{opt.desc}</p>
+              </Card>
+            </button>
           ))}
         </div>
 
-        <p className="mt-8 text-center text-xs text-muted-foreground">
-          نقش شما پس از ورود از حساب واقعی سامانه خوانده می‌شود.
-        </p>
+        {selectedRole ? (
+          <Card className="mx-auto mt-8 max-w-md gap-4 p-5">
+            <p className="text-center text-sm text-muted-foreground">
+              ورود به عنوان {options.find((opt) => opt.role === selectedRole)?.label}
+            </p>
+            <form className="grid gap-4" onSubmit={submit}>
+              <div className="grid gap-2">
+                <Label htmlFor="email">ایمیل</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="username"
+                  dir="ltr"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                  disabled={status === "loading"}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">رمز عبور</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  dir="ltr"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  minLength={8}
+                  disabled={status === "loading"}
+                />
+              </div>
+              {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+              <Button type="submit" className="w-full" disabled={status === "loading"}>
+                {status === "loading" ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    در حال ورود...
+                  </>
+                ) : (
+                  "ورود"
+                )}
+              </Button>
+            </form>
+          </Card>
+        ) : null}
       </main>
     </div>
   );

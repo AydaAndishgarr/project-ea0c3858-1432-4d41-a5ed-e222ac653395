@@ -8,7 +8,7 @@ export const DEMO_MODE =
 export const API_BASE_URL = (
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
   (import.meta.env.VITE_API_URL as string | undefined) ||
-  ""
+  "http://localhost:3001/api/v1"
 ).replace(/\/$/, "");
 
 export const APP_NAME = "خانه یار";
