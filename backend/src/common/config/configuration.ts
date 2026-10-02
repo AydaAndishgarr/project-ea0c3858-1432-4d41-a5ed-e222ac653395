@@ -18,7 +18,7 @@ export default () => ({
   nodeEnv: process.env.NODE_ENV ?? 'development',
   databaseUrl: process.env.DATABASE_URL,
   apiPrefix: process.env.API_PREFIX ?? 'api/v1',
-  frontendOrigin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:8080',
+  frontendOrigin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:8080,http://localhost:5173',
   jwt: {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN ?? '1d',

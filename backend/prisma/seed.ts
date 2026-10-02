@@ -23,14 +23,14 @@ async function main() {
   const password = envOr('SEED_DEMO_PASSWORD', 'Demo@12345');
   const passwordHash = await hash(password, 10);
 
-  const adminEmail = envOr('SEED_ADMIN_EMAIL', 'admin@example.com');
-  const managerEmail = envOr('SEED_MANAGER_EMAIL', 'manager@example.com');
-  const residentEmail = envOr('SEED_RESIDENT_EMAIL', 'resident@example.com');
-  const providerEmail = envOr('SEED_PROVIDER_EMAIL', 'provider@example.com');
+  const adminEmail = envOr('SEED_ADMIN_EMAIL', 'admin@example.com').toLowerCase();
+  const managerEmail = envOr('SEED_MANAGER_EMAIL', 'manager@example.com').toLowerCase();
+  const residentEmail = envOr('SEED_RESIDENT_EMAIL', 'resident@example.com').toLowerCase();
+  const providerEmail = envOr('SEED_PROVIDER_EMAIL', 'provider@example.com').toLowerCase();
 
   const admin = await prisma.user.upsert({
     where: { email: adminEmail },
-    update: { passwordHash, role: Role.ADMIN, status: UserStatus.ACTIVE },
+    update: { email: adminEmail, passwordHash, role: Role.ADMIN, status: UserStatus.ACTIVE },
     create: {
       email: adminEmail,
       phone: envOr('SEED_ADMIN_PHONE', '09120000000'),
@@ -42,7 +42,7 @@ async function main() {
 
   const manager = await prisma.user.upsert({
     where: { email: managerEmail },
-    update: { passwordHash, role: Role.MANAGER, status: UserStatus.ACTIVE },
+    update: { email: managerEmail, passwordHash, role: Role.MANAGER, status: UserStatus.ACTIVE },
     create: {
       email: managerEmail,
       phone: envOr('SEED_MANAGER_PHONE', '09123456789'),
@@ -54,7 +54,7 @@ async function main() {
 
   const resident = await prisma.user.upsert({
     where: { email: residentEmail },
-    update: { passwordHash, role: Role.RESIDENT, status: UserStatus.ACTIVE },
+    update: { email: residentEmail, passwordHash, role: Role.RESIDENT, status: UserStatus.ACTIVE },
     create: {
       email: residentEmail,
       phone: envOr('SEED_RESIDENT_PHONE', '09121122334'),
@@ -66,7 +66,7 @@ async function main() {
 
   const providerUser = await prisma.user.upsert({
     where: { email: providerEmail },
-    update: { passwordHash, role: Role.PROVIDER, status: UserStatus.ACTIVE },
+    update: { email: providerEmail, passwordHash, role: Role.PROVIDER, status: UserStatus.ACTIVE },
     create: {
       email: providerEmail,
       phone: envOr('SEED_PROVIDER_PHONE', '02188997766'),
